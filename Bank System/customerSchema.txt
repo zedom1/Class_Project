@@ -1,0 +1,6 @@
+firstName String 10
+lastName String 10
+sorted int
+custoemrID int
+numOfCheckingAccount int
+numOfSavingAccount int

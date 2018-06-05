@@ -1,0 +1,101 @@
+			CUSTOMERS REPORT
+			=================
+
+ID: 1 ; Customer: Bryant, Owen
+ID: 1 ; Checking Account: current balance is 522.50 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Checking account id: 1 result: true operation: add amount: 500.0 descripition:  Owen Bryant
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 1 result: false operation: withdraw amount: 150.0 descripition: No overdraft protection  Deficit : 150.0
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 1 result: true operation: deposit amount: 22.5 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 1 result: false operation: withdraw amount: 47.62 descripition: No overdraft protection  Deficit : 47.62
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 1 result: false operation: withdraw amount: 400.0 descripition: No overdraft protection  Deficit : 400.0
+
+ID: 0 ; Customer: Smith, Jane
+ID: 0 ; Saving Account: current balance is 324.88 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Saving account id: 0 result: true operation: add amount: 500.0 descripition:  Jane Smith
+Sun Dec 10 20:40:15 CST 2017  type: SavingAccount id: 0 result: true operation: withdraw amount: 150.0 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: SavingAccount id: 0 result: true operation: deposit amount: 22.5 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: SavingAccount id: 0 result: true operation: withdraw amount: 47.62 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: SavingAccount id: 0 result: false operation: withdraw amount: 400.0 descripition: Insufficient funds  Deficit : 75.12
+
+ID: 3 ; Customer: Soley, Maria
+ID: 2 ; Checking Account: current balance is 150.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Checking account id: 2 result: true operation: add amount: 500.0 descripition:  Tim Soley
+Sun Dec 10 20:40:15 CST 2017  type: Checking account id: 2 result: true operation: add amount: 500.0 descripition: Sharing account
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: withdraw amount: 150.0 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: deposit amount: 22.5 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: withdraw amount: 47.62 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: withdraw amount: 400.0 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: deposit amount: 150.0 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: false operation: withdraw amount: 750.0 descripition: Insufficient funds for overdraft protection  Deficit : 475.12
+
+ID: 2 ; Customer: Soley, Tim
+ID: 2 ; Checking Account: current balance is 150.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Checking account id: 2 result: true operation: add amount: 500.0 descripition:  Tim Soley
+Sun Dec 10 20:40:15 CST 2017  type: Checking account id: 2 result: true operation: add amount: 500.0 descripition: Sharing account
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: withdraw amount: 150.0 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: deposit amount: 22.5 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: withdraw amount: 47.62 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: withdraw amount: 400.0 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: true operation: deposit amount: 150.0 descripition: 
+Sun Dec 10 20:40:15 CST 2017  type: CheckingAccount id: 2 result: false operation: withdraw amount: 750.0 descripition: Insufficient funds for overdraft protection  Deficit : 475.12
+
+ID: 4 ; Customer: b, a
+ID: 3 ; Saving Account: current balance is 400.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Saving account id: 3 result: true operation: add amount: 500.0 descripition:  a b
+Sun Dec 10 20:40:15 CST 2017  type: SavingAccount id: 3 result: true operation: withdraw amount: 100.0 descripition: 
+
+ID: 5 ; Saving Account: current balance is 300.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Saving account id: 5 result: true operation: add amount: 300.0 descripition:  a b
+
+ID: 4 ; Checking Account: current balance is 200.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Checking account id: 4 result: true operation: add amount: 200.0 descripition:  a b
+
+ID: 5 ; Customer: d, c
+ID: 7 ; Saving Account: current balance is 380.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Saving account id: 7 result: true operation: add amount: 500.0 descripition:  c d
+Sun Dec 10 20:40:15 CST 2017  type: SavingAccount id: 7 result: true operation: withdraw amount: 120.0 descripition: 
+
+ID: 6 ; Saving Account: current balance is 300.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Saving account id: 6 result: true operation: add amount: 300.0 descripition:  c d
+
+ID: 8 ; Checking Account: current balance is 200.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Checking account id: 8 result: true operation: add amount: 200.0 descripition:  c d
+
+ID: 6 ; Customer: f, e
+ID: 11 ; Saving Account: current balance is 360.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Saving account id: 11 result: true operation: add amount: 500.0 descripition:  e f
+Sun Dec 10 20:40:15 CST 2017  type: SavingAccount id: 11 result: true operation: withdraw amount: 140.0 descripition: 
+
+ID: 10 ; Saving Account: current balance is 300.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Saving account id: 10 result: true operation: add amount: 300.0 descripition:  e f
+
+ID: 9 ; Checking Account: current balance is 200.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Checking account id: 9 result: true operation: add amount: 200.0 descripition:  e f
+
+ID: 7 ; Customer: h, g
+ID: 12 ; Saving Account: current balance is 340.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Saving account id: 12 result: true operation: add amount: 500.0 descripition:  g h
+Sun Dec 10 20:40:15 CST 2017  type: SavingAccount id: 12 result: true operation: withdraw amount: 160.0 descripition: 
+
+ID: 14 ; Saving Account: current balance is 300.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Saving account id: 14 result: true operation: add amount: 300.0 descripition:  g h
+
+ID: 13 ; Checking Account: current balance is 200.00 
+Transaction:
+Sun Dec 10 20:40:15 CST 2017  type: Checking account id: 13 result: true operation: add amount: 200.0 descripition:  g h
+

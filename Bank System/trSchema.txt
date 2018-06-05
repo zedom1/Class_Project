@@ -1,0 +1,7 @@
+classname String 20
+operation String 8
+description String 20
+isOK int
+id int
+time long
+amount double

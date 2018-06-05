@@ -1,0 +1,3 @@
+balance double
+accountID int
+interestRate double

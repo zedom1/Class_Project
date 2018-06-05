@@ -1,0 +1,19 @@
+account
+Jane Smith,s 500 i 0.03;
+Owen Bryant,c 500;
+Tim Soley,c 500 o 500;
+Maria Soley,c share Tim Soley;
+a b,s 500.00 i 0.05,c 200.00 o 400.00,s 300.00 i 0.03;
+c d,s 300.00 i 0.03,s 500.00 i 0.05,c 200.00 o 400.00;
+e f,c 200.00 o 400.00,s 300.00 i 0.03,s 500.00 i 0.05;
+g h,s 500.00 i 0.05,c 200.00 o 400.00,s 300.00 i 0.03;
+
+transaction
+Jane Smith,*,w 150.00,d 22.50,w 47.62,w 400.00;
+Owen Bryant,*,w 150.00,d 22.50,w 47.62,w 400.00;
+Tim Soley,*,w 150.00,d 22.50,w 47.62,w 400.00;
+Maria Soley,*,d 150.00,w 750.00;
+a b,*,w 100.00;
+c d,*,w 120.00;
+e f,*,w 140.00;
+g h,*,w 160.00;
