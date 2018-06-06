@@ -35,4 +35,7 @@ public class Session {
 	public void addBook(int w , int l) {
 		seat.addBook(w,l);
 	}
+	public void setSeatMap(boolean [][]map) {
+		seat.setMap(map);
+	}
 }

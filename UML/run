@@ -1,0 +1,3 @@
+find . -name "*.class" -type f -exec rm -rf {} \;
+javac ui/Main.java
+java ui.Main

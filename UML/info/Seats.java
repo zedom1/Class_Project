@@ -17,10 +17,10 @@ public class Seats {
 		width = 8;
 		length = 5;
 		booked = new boolean[width][length];
-		Random rand = new Random();
-		for(int i=0; i<width; i++)
-			for(int j=0; j<length; j++)
-				booked[i][j] = rand.nextBoolean();
+//		Random rand = new Random();
+//		for(int i=0; i<width; i++)
+//			for(int j=0; j<length; j++)
+//				booked[i][j] = rand.nextBoolean();
 	}
 	
 	public boolean[][] getSeatMap() {
@@ -28,5 +28,11 @@ public class Seats {
 	}
 	public void addBook(int w , int l) {
 		booked[w][l]=true;
+	}
+	public int[] getSeatShape() {
+		return new int[] {width, length};
+	}
+	public void setMap(boolean [][] map) {
+		booked = map;
 	}
 }

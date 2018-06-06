@@ -29,7 +29,6 @@ public class Cinema {
 		}
 		return null;
 	}
-	
 	public static Movie createMovie(String[]line) {
 		int id = Integer.parseInt(line[0]);
 		Movie movie = new Movie(id);
@@ -37,13 +36,11 @@ public class Cinema {
 		movielist.add(movie);
 		return movie;
 	}
-	
 	public static User createUser(String [] line) {
 		User user = new User( Integer.parseInt(line[0]), line[1], line[2], line[3], line[4].equals("0"), line[5], line[6], line[7]);
 		userlist.add(user);
 		return user;
 	}
-	
 	public static BookItem makeNewItem(int u, int m , int s ,  int p) {
 		BookItem b = new BookItem(u,m,s,p);
 		return b;
