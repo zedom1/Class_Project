@@ -3,25 +3,36 @@ package System;
 import Support.MySQL;
 import Support.Interface.DatabaseInterface;
 import Support.Interface.LoginInterface;
+import Support.Interface.RegisterInterface;
+import Support.Interface.UserBase;
 import System.Human.User;
 
 public class ClassSystem {
 
 	static private User currentUser;
 	private static DatabaseInterface database;
+	private static UserBase userinterface;
 	
 	ClassSystem(){
 		database = new MySQL();
 	}
 	
 	public static void login() {
-		currentUser = LoginInterface.login();
+		String code = ((LoginInterface)userinterface).login();
+		currentUser = database.getUser(code);
+
 	}
 	
-	public static int register() {
-		User user = new User();
-		//userlist.add(user);
-		return user.getID();
+	public static int register(String nick, String login, String pass, int clas) {
+		String code = ((RegisterInterface)userinterface).register();
+		currentUser = new User(nick,login,pass,clas);
+		int id = currentUser.getID();
+		database.saveUser(id, code);
+		return id;
+	}
+	
+	public static void logout() {
+		currentUser = null;
 	}
 	
 	public static int getUserLength() {

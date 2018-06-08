@@ -1,5 +1,8 @@
 package Support.Interface;
 
-public class RegisterInterface {
-
+public interface RegisterInterface extends UserBase {
+	
+	public abstract String register();
+	
+	
 }

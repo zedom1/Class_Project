@@ -2,10 +2,8 @@ package Support.Interface;
 
 import System.Human.User;
 
-public class LoginInterface {
+public interface LoginInterface extends UserBase {
 	
-	public static User login() {
-		return null;
-	}
+	public abstract String login();
 	
 }
