@@ -1,6 +1,6 @@
 package System;
 
-import Support.MySQL;
+import Support.Factory;
 import Support.Interface.DatabaseInterface;
 import Support.Interface.LoginInterface;
 import Support.Interface.RegisterInterface;
@@ -13,14 +13,14 @@ public class ClassSystem {
 	private static DatabaseInterface database;
 	private static UserBase userinterface;
 	
-	ClassSystem(){
-		database = new MySQL();
+	public ClassSystem() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+		database = Factory.getFactory().getDataBase();
+		userinterface = Factory.getFactory().getUserBase();
 	}
 	
 	public static void login() {
 		String code = ((LoginInterface)userinterface).login();
 		currentUser = database.getUser(code);
-
 	}
 	
 	public static int register(String nick, String login, String pass, int clas) {
