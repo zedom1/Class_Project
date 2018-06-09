@@ -1,12 +1,12 @@
 package Support.Interface;
 
-import System.Human.User;
+import System.Human.Human;
 
 public interface DatabaseInterface {
 	
 	public abstract int getUserlistLength();
 	
-	public abstract User getUser(String code);
+	public abstract Human getUser(String code);
 	
 	public abstract void saveUser(int userid, String code);
 	

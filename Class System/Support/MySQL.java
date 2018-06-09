@@ -1,17 +1,18 @@
 package Support;
 
 import Support.Interface.DatabaseInterface;
-import System.Human.User;
+import System.Human.Human;
 
 public class MySQL implements DatabaseInterface {
 
+	@Override
 	public int getUserlistLength() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public User getUser(String code) {
+	public Human getUser(String code) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -24,6 +25,18 @@ public class MySQL implements DatabaseInterface {
 
 	@Override
 	public int getFileLength() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getRecordLength() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getFolderLength() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -1,7 +1,4 @@
-package Support;
-
-import Support.Interface.DatabaseInterface;
-import Support.Interface.UserBase;
+package Support.Interface;
 
 public class Factory {
 	

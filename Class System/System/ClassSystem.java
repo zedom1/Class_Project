@@ -1,22 +1,20 @@
 package System;
 
-import java.util.ArrayList;
-
-import Support.Factory;
 import Support.Interface.DatabaseInterface;
+import Support.Interface.Factory;
 import Support.Interface.LoginInterface;
 import Support.Interface.RegisterInterface;
 import Support.Interface.UserBase;
-import System.Basic.Record;
-import System.Human.User;
+import System.Human.Human;
 
 public class ClassSystem {
 
-	static private User currentUser;
+	private static Human currentUser;
+	private static Recorder recorder;
+	private static Cloud cloud;
 	private static DatabaseInterface database;
 	private static UserBase userinterface;
-	private static Recorder recorder;
-
+	
 	
 	public ClassSystem() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		initAdapter();
@@ -35,7 +33,7 @@ public class ClassSystem {
 	
 	public static int register(String nick, String login, String pass, int clas) {
 		String code = ((RegisterInterface)userinterface).register();
-		currentUser = new User(nick,login,pass,clas);
+		currentUser = new Human(nick,login,pass,clas);
 		int id = currentUser.getID();
 		database.saveUser(id, code);
 		return id;
