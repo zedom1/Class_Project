@@ -21,5 +21,11 @@ public class MySQL implements DatabaseInterface {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public int getFileLength() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

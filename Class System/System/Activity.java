@@ -1,6 +1,7 @@
 package System;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import System.Basic.Update;
 
@@ -11,6 +12,17 @@ public class Activity {
 	
 	public static void addUpdate(Update update) {
 		updatelist.add(update);
+	}
+	
+	public static Update addUpdate(int userID, String context, String location, Date start, Date end) {
+		Update update = new Update(userID, context , location, start , end);
+		return update;
+	}
+	
+	public static void removeUpdate(int id) {
+		for(int i=0; i<updatelist.size(); i++)
+			if(updatelist.get(i).getId()==id)
+				updatelist.remove(i);
 	}
 	
 	// add toplist from updatelist by id or index

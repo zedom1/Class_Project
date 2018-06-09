@@ -1,10 +1,16 @@
 package System.Human;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Date;
 
+import System.Activity;
+import System.Calendar;
 import System.ClassSystem;
+import System.Recorder;
 import System.Basic.Collection;
+import System.Basic.Event;
+import System.Basic.Update;
 
 public class User {
 	
@@ -12,17 +18,24 @@ public class User {
 	protected String nickname;
 	protected String loginname;
 	protected String password;
+	protected String title;
 	protected int classID;
 	protected int age;
 	protected boolean gender;
-	protected String title;
 	protected Date date;
+	protected Date birthday;
+	protected Calendar calendar;
 	
+	// 维护在该用户界面置顶的动态的ID
 	protected ArrayList<Integer> topUpdate = new ArrayList<>(); 
+	// 维护自己发布的动态的ID
+	protected ArrayList<Integer> selfUpdate = new ArrayList<>();
+	// 维护收藏夹
 	protected ArrayList<Collection> collections = new ArrayList<>(); 
 	
+	
 	public User(String nickname, String loginname, String password, int classID, int age, boolean gender,
-			String title) {
+			String title,Date birthday) {
 		this();
 		this.nickname = nickname;
 		this.loginname = loginname;
@@ -31,6 +44,7 @@ public class User {
 		this.age = age;
 		this.gender = gender;
 		this.title = title;
+		this.birthday = birthday;
 	}
 
 	public User(String nick, String login, String pass, int clas) {
@@ -50,25 +64,120 @@ public class User {
 		topUpdate.add(id);
 	}
 	
+	
+	
+	// collection:
+	/////////////////////////
 	public Collection addCollection(int id) {
 		Collection collection = new Collection(collections.size(),id);
 		collections.add(collection);
+		Recorder.addRecord(this.id, "add Collection", ""+id+" "+collection.getId());
 		return collection;
 	}
-	
 	public void addCollection(int id, String comment) {
 		Collection collection = addCollection(id);
+		Recorder.addRecord(this.id, "add Collection", ""+id+" "+collection.getId());
 		collection.setComment(comment);
 	}
-	
-	
-	
-	
-	
-	
+	public void modiftyCollection(int id, String attribute, Object object) {
+		Collection collection = getCollectionByID(id);
+		switch(attribute) {
+		case "comment": collection.setComment((String)object); break;
+		}
+		Recorder.addRecord(this.id, "modify Collection", ""+id+" "+collection.getId()+attribute+object.toString());
+	}
+	public void removeCollection(int id) {
+		Collection collection = getCollectionByID(id);
+		collections.remove(collection);
+		Recorder.addRecord(this.id, "remove Collection", ""+id+" "+collection.getId());
+	}
+	public Collection getCollectionByID(int id) {
+		for(Collection c : collections)
+			if (c.getId()==id)
+				return c;
+		return null;
+	}
 	public ArrayList<Collection> getCollections() {
 		return collections;
 	}
+	public int getCollectionIndexByID(int id) {
+		for(int i=0; i<collections.size(); i++)
+			if (collections.get(i).getId()==id)
+				return i;
+		return -1;
+	}
+	/////////////////////////
+	
+	// update:
+	public void addUpdate( String context, String location, Date start, Date end) {
+		Update update = new Update(id, context, location,start,end);
+		Activity.addUpdate(update);
+		Recorder.addRecord(this.id, "add Update", ""+id+" "+update.getId());
+	}
+	public void modifyUpdate(int id , String attribute, Object object) {
+		if(!selfUpdate.contains(id)) 
+			return;
+		Update update = Activity.getUpdateByID(id);
+		switch(attribute) {
+		case "startDate": update.setStartDate((Date)object); break;
+		case "endDate": update.setEndDate((Date)object); break;
+		case "content": update.setContent((String)object); break;
+		case "location": update.setLocation((String)object); break;
+		}
+		Recorder.addRecord(this.id, "modify Update", ""+id+" "+update.getId()+attribute+object);
+	}
+	public void removeUpdate(int id) {
+		if(!selfUpdate.contains(id)) 
+			return;
+		Update update = Activity.getUpdateByID(id);
+		Activity.removeUpdate(id);
+		for(int i=0; i<selfUpdate.size(); i++)
+			if(selfUpdate.get(i)==id)
+				selfUpdate.remove(i);
+		Recorder.addRecord(this.id, "remove Update", ""+id+" "+update.getId());
+	}
+	
+	/////////////////////////
+	
+	// event:
+	/*
+	 * 	private Date startDate;
+		private Date EndDate;
+		private String content;
+		private String location;
+		private Color color;
+	 * 
+	 * */
+	public void addEvent( String context, String location, Date start, Date end, Color color) {
+		Event event = new Event(id, context, location,start,end);
+		event.setColor(color);
+		Calendar.addEvent(event);
+		Recorder.addRecord(this.id, "add Event", ""+id+" "+event.getId());
+	}
+	public void addEvent(Update update) {
+		Event event = new Event(update);
+		Calendar.addEvent(event);
+		Recorder.addRecord(this.id, "add Event", ""+id+" "+event.getId());
+	}
+	public void modifyEvent(int id , String attribute, Object object) {
+		if(!Calendar.contains(id)) 
+			return;
+		Event event = Calendar.getEventByID(id);
+		switch(attribute) {
+		case "startDate": event.setStartDate((Date)object); break;
+		case "endDate": event.setEndDate((Date)object); break;
+		case "content": event.setContent((String)object); break;
+		case "color": event.setColor((Color)object); break;
+		}
+		Recorder.addRecord(this.id, "modify Event", ""+id+" "+event.getId()+attribute+object);
+	}
+	public void removeEvent(int id) {
+		Calendar.removeEvent(id);
+		Recorder.addRecord(this.id, "remove Event", ""+id+" "+id);
+	}
+	
+	/////////////////////////
+	
 
 	public ArrayList<Integer> getTopUpdate() {
 		return topUpdate;
@@ -84,6 +193,7 @@ public class User {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+		Recorder.addRecord(this.id, "set nickname", ""+nickname);
 	}
 
 	public int getClassID() {
@@ -92,6 +202,7 @@ public class User {
 
 	public void setClassID(int classID) {
 		this.classID = classID;
+		Recorder.addRecord(this.id, "set class", ""+classID);
 	}
 
 	public int getAge() {
@@ -100,6 +211,7 @@ public class User {
 
 	public void setAge(int age) {
 		this.age = age;
+		Recorder.addRecord(this.id, "set age", ""+age);
 	}
 
 	public boolean getGender() {
@@ -108,6 +220,7 @@ public class User {
 
 	public void setGender(boolean gender) {
 		this.gender = gender;
+		Recorder.addRecord(this.id, "set gender", ""+gender);
 	}
 
 	public String getTitle() {
@@ -116,6 +229,7 @@ public class User {
 
 	public void setTitle(String title) {
 		this.title = title;
+		Recorder.addRecord(this.id, "set title", ""+title);
 	}
 
 	public String getLoginname() {
@@ -124,6 +238,7 @@ public class User {
 
 	public void setLoginname(String loginname) {
 		this.loginname = loginname;
+		Recorder.addRecord(this.id, "set loginname", ""+loginname);
 	}
 
 	public String getPassword() {
@@ -132,9 +247,20 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+		Recorder.addRecord(this.id, "set password", ""+password);
 	}
 	
 	public void setDate(Date date) {
 		this.date = date;
+		Recorder.addRecord(this.id, "set date", ""+date);
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+		Recorder.addRecord(this.id, "set birthday", ""+birthday);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import System.Activity;
+import System.Calendar;
 
 public class Event {
 
@@ -12,22 +13,31 @@ public class Event {
 	private int userID;
 	private Date date;
 	private Date startDate;
-	private Date EndDate;
-	private String context;
+	private Date endDate;
+	private String content;
 	private String location;
 	private Color color;
 	
-	public Event( int userID, String context, String location, Date start, Date end) {
+	public Event(Update update) {
+		this();
+		this.userID = update.getUserID();
+		this.startDate = update.getStartDate();
+		this.endDate = update.getEndDate();
+		this.content = update.getContent();
+		this.location = update.getLocation();
+	}
+	
+	public Event( int userID, String content, String location, Date start, Date end) {
 		this();
 		this.userID = userID;
-		this.context = context;
+		this.content = content;
 		this.location = location;
 		this.startDate = start;
-		this.EndDate = end;
+		this.endDate = end;
 	}
 	
 	public Event() {
-		id = Activity.getUpdateLength();
+		id = Calendar.getEventLength();
 		date = new Date();
 	}
 
@@ -35,7 +45,10 @@ public class Event {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("userID", userID );
 		map.put("date", date );
-		map.put("context", context );
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("color", color);
+		map.put("content", content );
 		map.put("location", location );
 		return map;
 	}
@@ -46,11 +59,11 @@ public class Event {
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
-	public String getContext() {
-		return context;
+	public String getContent() {
+		return content;
 	}
-	public void setContext(String context) {
-		this.context = context;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	public String getLocation() {
 		return location;
@@ -65,10 +78,10 @@ public class Event {
 		this.startDate = startDate;
 	}
 	public Date getEndDate() {
-		return EndDate;
+		return endDate;
 	}
-	public void setEndDate(Date endDate) {
-		EndDate = endDate;
+	public void setEndDate(Date end) {
+		endDate = end;
 	}
 
 	public int getId() {

@@ -12,13 +12,13 @@ public class Update {
 	private Date date;
 	private Date startDate;
 	private Date EndDate;
-	private String context;
+	private String content;
 	private String location;
 	
-	public Update( int userID, String context, String location, Date start, Date end) {
+	public Update( int userID, String content, String location, Date start, Date end) {
 		this();
 		this.userID = userID;
-		this.context = context;
+		this.content = content;
 		this.location = location;
 		this.startDate = start;
 		this.EndDate = end;
@@ -33,7 +33,7 @@ public class Update {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("userID", userID );
 		map.put("date", date );
-		map.put("context", context );
+		map.put("content", content );
 		map.put("location", location );
 		return map;
 	}
@@ -47,11 +47,11 @@ public class Update {
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
-	public String getContext() {
-		return context;
+	public String getContent() {
+		return content;
 	}
-	public void setContext(String context) {
-		this.context = context;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	public String getLocation() {
 		return location;

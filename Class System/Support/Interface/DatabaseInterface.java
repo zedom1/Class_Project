@@ -10,4 +10,9 @@ public interface DatabaseInterface {
 	
 	public abstract void saveUser(int userid, String code);
 	
+	public abstract int getFileLength();
+	
+	public abstract int getRecordLength();
+	
+	public abstract int getFolderLength();
 }
