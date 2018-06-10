@@ -8,6 +8,4 @@ public abstract class Role {
 	
 	public abstract void removeUpdate(int id,ArrayList<Integer> selfUpdate, int userID);
 	
-	
-	
 }
