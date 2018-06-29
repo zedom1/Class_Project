@@ -13,6 +13,7 @@ public:
     ~RecordList();
     void addRecord(Record * record);
     void addRecord(int type, int a1, int a2);
+    void addRecord(int type, int a1, int a2,Item **a);
     Record * move(int mod=0);
     void clear();
     bool empty();

@@ -1,6 +1,8 @@
 #include "sortalgorithm.h"
 
 SortAlgorithm * SortAlgorithm::algorithm = nullptr;
+QGraphicsScene * SortAlgorithm::scene = nullptr;
+
 
 SortAlgorithm::SortAlgorithm()
 {

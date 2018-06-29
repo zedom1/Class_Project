@@ -3,7 +3,6 @@
 
 #include <QTimer>
 
-
 class Event
 {
 private:
@@ -15,6 +14,8 @@ public:
 
     QTimer * swapTimer;
     QTimer * wholeTimer;
+    QTimer * downTimer;
+    QTimer * mergeTimer;
     int userMode;
     //QTimer * wholeTimer2;
 

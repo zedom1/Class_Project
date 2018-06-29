@@ -35,7 +35,18 @@ void RecordList::addRecord(int type, int a1, int a2)
         this->current = r;
     }
 }
+void RecordList::addRecord(int type, int a1, int a2,Item** a)
+{
+    Record * r = new Record(type, a1, a2,a,trailer->pred,trailer);
+    this->trailer->pred->succ = r;
+    this->trailer->pred = r;
+    this->size++;
+    if(this->size==1){
+        //std::cout<<"set current\n";
+        this->current = r;
+    }
 
+}
 Record * RecordList::move(int mod)
 {
     if(mod==0)

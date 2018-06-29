@@ -32,7 +32,9 @@ SOURCES += \
     recordlist.cpp \
     event.cpp \
     sortalgorithm.cpp \
-    selectionsort.cpp
+    selectionsort.cpp \
+    quicksort.cpp \
+    mergesort.cpp
 
 HEADERS += \
         widget.h \
@@ -42,7 +44,9 @@ HEADERS += \
     recordlist.h \
     event.h \
     sortalgorithm.h \
-    selectionsort.h
+    selectionsort.h \
+    quicksort.h \
+    mergesort.h
 
 FORMS += \
         widget.ui

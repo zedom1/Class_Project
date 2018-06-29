@@ -1,16 +1,15 @@
-#include "selectionsort.h"
+#include "quicksort.h"
 
-SelectionSort * SelectionSort::selectionSort = nullptr;
-Widget * SelectionSort::wid = nullptr;
-
+QuickSort * QuickSort::qSort = nullptr;
+Widget * QuickSort::wid = nullptr;
 
 /*
- * SelectionSort的构造函数
+ * Processor的构造函数
  * 核心思想：每一个待排序的数组对应一个processor，若数组更新则删掉旧的，换成新的processor
  * 每个processor有自己的scene、recordlist
  * widget作为公用参数，在main里面生成，在这里仅用指针指向它用于向scene里添加
  */
-SelectionSort::SelectionSort(Widget * widget, int num, int*array)
+QuickSort::QuickSort(Widget * widget, int num, int*array)
 {
     numItem = (num==0)? qrand()%9+2 : num;
     count = 0;
@@ -24,8 +23,8 @@ SelectionSort::SelectionSort(Widget * widget, int num, int*array)
     addItem();
 
     Event * event = Event::getEvent();
-    connect(event->swapTimer,&QTimer::timeout, this,&SelectionSort::swap);
-    connect(event->wholeTimer, &QTimer::timeout, this, &SelectionSort::handleRecord);
+    connect(event->swapTimer,&QTimer::timeout, this,&QuickSort::swap);
+    connect(event->wholeTimer, &QTimer::timeout, this, &QuickSort::handleRecord);
 
 }
 
@@ -38,7 +37,7 @@ SelectionSort::SelectionSort(Widget * widget, int num, int*array)
  *      最大最小值归一化： 找到数组的最大值和最小值，（每个元素-最小值+1） / （最大值-最小值）
  *      得到的数字在（ 0， 1.几 ）之间， 作为长度的放缩比例
  */
-void SelectionSort::handleArray(int *array)
+void QuickSort::handleArray(int *array)
 {
     int minx = 100;
     int maxn = 0;
@@ -68,16 +67,16 @@ void SelectionSort::handleArray(int *array)
     delete []temarray;
 }
 
-// SelectionSort使用单例模式，此为获得类唯一实例的接口
-SelectionSort* SelectionSort::getInstance(Widget * widget)
+// Processor使用单例模式，此为获得类唯一实例的接口
+QuickSort* QuickSort::getInstance(Widget * widget)
 {
-    if(selectionSort == nullptr)
-        selectionSort = new SelectionSort(widget);
-    return selectionSort;
+    if(qSort == nullptr)
+        qSort = new QuickSort(widget);
+    return qSort;
 }
 
 // 用户重新设定数组或重新随机初始化之后要调用的函数
-SelectionSort* SelectionSort::resetAlgorithm(int num, int * array)
+QuickSort* QuickSort::resetAlgorithm(int num, int * array)
 {
     for(int i=0; i<numItem; i++){
         scene->removeItem(itemList[i]->rect);
@@ -91,17 +90,17 @@ SelectionSort* SelectionSort::resetAlgorithm(int num, int * array)
     getRecord();
     addItem();
 
-    return selectionSort;
+    return qSort;
 }
 
 // 向scene里面添加item
 // 要先加widget 即背景、按钮那些，再加矩形、文本等
 // 不然widget会把它们覆盖掉
-void SelectionSort::addItem(){
+void QuickSort::addItem(){
     if(scene == nullptr){
         scene = new QGraphicsScene;
         scene->setSceneRect(0,0,1200,700);
-        connect(scene, &QGraphicsScene::changed, this, &SelectionSort::update);
+        connect(scene, &QGraphicsScene::changed, this, &QuickSort::update);
         scene->addWidget(wid);
     }
     for(int i=0; i<numItem; ++i){
@@ -110,7 +109,7 @@ void SelectionSort::addItem(){
     }
 }
 
-void SelectionSort::update()
+void QuickSort::update()
 {
     this->scene->update(this->scene->sceneRect());
 }
@@ -118,11 +117,11 @@ void SelectionSort::update()
 // swap定时器触发之后调用
 // 每次移动一小点，count记录当前移动小步的次数
 // totalCount记录总共要移动小步的次数
-void SelectionSort::swap()
+void QuickSort::swap()
 {
     if(count==0){
-        itemList[index1]->rect->setColorMode(Rect::SWAP);
-        itemList[index2]->rect->setColorMode(Rect::SWAP);
+       // itemList[index1]->rect->setColorMode(Rect::SWAP);
+       // itemList[index2]->rect->setColorMode(Rect::SWAP);
     }
     count++;
     if(count<=totalCount){
@@ -135,15 +134,14 @@ void SelectionSort::swap()
     else{
         count = 0;
         Event::getEvent()->swapTimer->stop();
-        itemList[index1]->rect->setColorMode(Rect::NORMAL);
-        itemList[index2]->rect->setColorMode(Rect::NORMAL);
+      //  itemList[index1]->rect->setColorMode(Rect::NORMAL);
+      //  itemList[index2]->rect->setColorMode(Rect::NORMAL);
         Item * tem = itemList[index1];
         itemList[index1] = itemList[index2];
         itemList[index2] = tem;
     }
 }
-
-void SelectionSort::restart()
+void QuickSort::restart()
 {
     //Record * temrecord = recordList->current;
     Record * current = recordList->move(1);
@@ -167,42 +165,70 @@ void SelectionSort::restart()
     update();
 }
 
+void QuickSort::quickSort(int *temarray,int l,int r)
+{
+    int temp;
+    int tempPivot;
+        if (l< r)
+        {
+
+            int i = l, j = r, pivot = temarray[l];
+            tempPivot=l;
+              recordList->addRecord(0,4,i);
+            while (i < j)
+            {
+                while (i < j && temarray[j] >= pivot) // 从右向左找第一个小于x的数
+                {
+                    recordList->addRecord(0,6,j);
+                    j--;
+                }
+                if (i < j)
+                {
+                    recordList->addRecord(0,6,j);
+                    temp = temarray[i];
+                    temarray[i] = temarray[j];
+                    temarray[j] = temp;
+                    tempPivot=j;
+                    recordList->addRecord(1,i,j);
+                    i++;
+                }
+                while (i < j && temarray[i] <= pivot) // 从左向右找第一个大于等于x的数
+                {
+                    recordList->addRecord(0,5,i);
+                    i++;
+                }
+                if (i < j)
+                {
+                    recordList->addRecord(0,5,i);
+                    temp = temarray[j];
+                    temarray[j] = temarray[i];
+                    temarray[i] = temp;
+                     recordList->addRecord(1,i,j);
+                     tempPivot=i;
+                    j--;
+                }
+            }
+            recordList->addRecord(0,7,tempPivot);
+
+            quickSort(temarray, l, i - 1); // 递归调用
+            quickSort(temarray, i + 1, r);
+        }
+        else if(l==r){
+            recordList->addRecord(0,7,l);
+        }
+}
 // 实现排序算法的核心函数
 // 核心思想：
 //      额外开一个数组复制原本内容，使用排序算法对这个数组进行排序，同时记录中间步骤
 //      在用户设定好数组后记录就生成了，剩下的演示只是读取生成的记录
-void SelectionSort::getRecord()
+void QuickSort::getRecord()
 {
-    //if(!recordList->empty())
-    //    return;
-    int minx = 0;
-    int minindex = 0;
-    //std::cout<<222<<std::endl;
     int * temarray = new int[numItem];
-    int tem;
-    for(int i=0; i<numItem ; i++)
-        temarray[i] = itemList[i]->num;
 
-    for(int i=0; i<numItem; i++){
-        minx = temarray[i];
-        minindex = i;
-        recordList->addRecord(0,2,i);
-        for(int j=i+1; j<numItem; j++){
-            recordList->addRecord(0,1,j);
-            if(temarray[j] < minx){
-                recordList->addRecord(0,0,minindex);
-                minx = temarray[j];
-                minindex = j;
-                recordList->addRecord(0,2,j);               
-            }
-        }
-        recordList->addRecord(0,3,numItem-1);
-        recordList->addRecord(1,i,minindex);
-        tem = temarray[minindex];
-        temarray[minindex] = temarray[i];
-        temarray[i] = tem;
-    }
-    delete []temarray;
+      for(int i=0; i<numItem ; i++)
+          temarray[i] = itemList[i]->num;
+      quickSort(temarray,0,numItem-1);
+       delete []temarray;
 }
 
 // 演示的核心函数
@@ -221,7 +247,7 @@ void SelectionSort::getRecord()
  *              3：若矩形不是最小，则恢复成正常颜色
  *          attribute 1： 矩形的index
  */
-void SelectionSort::handleRecord()
+void QuickSort::handleRecord()
 {
     //return;
     Event * event = Event::getEvent();
@@ -268,11 +294,27 @@ void SelectionSort::handleRecord()
             if(item->getColorMode()!=Rect::MAXN)
                 item->setColorMode(Rect::NORMAL);
             break;
+        case 4://当轮轴值
+            item->setColorMode(Rect::PIVOT);
+            break;
+        case 5:  //从左往右，设置选中。恢复上一个
+            item->setColorMode(Rect::SELECTED);
+            if(record->attribute2-1>=0&&itemList[record->attribute2-1]->rect->getColorMode()!=Rect::PIVOT&&itemList[record->attribute2-1]->rect->getColorMode()!=Rect::FINISHED)
+                itemList[record->attribute2-1]->rect->setColorMode(Rect::NORMAL);
+            break;
+        case 6://从右往左，设置选中，回复上一个
+            item->setColorMode(Rect::SELECTED);
+            if(record->attribute2+1 < numItem&&itemList[record->attribute2+1]->rect->getColorMode()!=Rect::PIVOT&&itemList[record->attribute2+1]->rect->getColorMode()!=Rect::FINISHED)
+                itemList[record->attribute2+1]->rect->setColorMode(Rect::NORMAL);
+            break;
+        case 7://已固定的轴值
+            item->setColorMode(Rect::FINISHED);
+            break;
         }
     }
 }
 
-SelectionSort::~SelectionSort()
+QuickSort::~QuickSort()
 {
     if(itemList){
         for(int i=0; i<numItem; i++)

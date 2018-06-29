@@ -1,18 +1,10 @@
-#ifndef OPERATOR_H
-#define OPERATOR_H
+#ifndef SELECTIONSORT_H
+#define SELECTIONSORT_H
 
-#include "item.h"
-#include "recordlist.h"
-#include "widget.h"
+
 #include "sortalgorithm.h"
 //#include <QWidget>
-#include "event.h"
-#include <iostream>
-#include <algorithm>
-#include <QApplication>
-#include <QtCore>
-#include <QObject>
-#include <QtWidgets>
+
 
 class SelectionSort : public QObject, public SortAlgorithm
 {
@@ -36,7 +28,7 @@ public:
     void restart();
     void getRecord();
     void handleRecord();
-    static QGraphicsScene *scene;
+
 
 private:
     SelectionSort( Widget * widget = nullptr, int num=0, int*array=nullptr );
@@ -59,4 +51,4 @@ private slots:
     void update();
 };
 
-#endif // OPERATOR_H
+#endif

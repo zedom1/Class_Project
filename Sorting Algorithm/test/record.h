@@ -1,6 +1,6 @@
 #ifndef RECORD_H
 #define RECORD_H
-
+#include "item.h"
 
 /*
  * type:
@@ -28,8 +28,10 @@ public:
 
     Record * succ;
     Record * pred;
-
+    Item **a;
     Record(int type, int i1, int i2, Record* pre=nullptr, Record* s = nullptr);
+    Record(int type, int i1, int i2,Item **a,Record* pre, Record* s);
+    Record(int type,int i1,int i2,Item **a);
     Record();
 };
 

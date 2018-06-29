@@ -5,8 +5,6 @@
 #include <QPoint>
 #include <iostream>
 
-
-
 class Rect : public QGraphicsItem
 {
 
@@ -16,7 +14,7 @@ public:
     Rect(double x, double y, double l);
     QRectF boundingRect() const;
 
-    enum selectMode {NORMAL, SELECTED, MAXN, SWAP} ;
+    enum selectMode {NORMAL, SELECTED, MAXN, SWAP,FINISHED,PIVOT} ;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void setColorMode(selectMode mode);

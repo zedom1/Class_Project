@@ -46,6 +46,12 @@ void Rect::paint(QPainter *painter,
     case MAXN:
         painter->setBrush(QColor(0,0,255,200));
         break;
+    case PIVOT:
+        painter->setBrush(QColor(255,0,0,200));
+        break;
+    case FINISHED:
+        painter->setBrush(QColor(0,0,255,200));
+        break;
     }
     painter->setPen(pen);
     painter->drawRect(this->x(), this->y()-length, width ,length);
