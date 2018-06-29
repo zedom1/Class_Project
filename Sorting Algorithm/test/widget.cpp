@@ -1,6 +1,6 @@
 #include "widget.h"
 #include "ui_widget.h"
-#include "processor.h"
+#include "sortalgorithm.h"
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -20,9 +20,14 @@ Widget::~Widget()
 void Widget::on_play_btn_clicked()
 {
     Event * event = Event::getEvent();
-    event->userMode = 0;
-    if(event->wholeTimer->isActive()==false)
-        event->wholeTimer->start(100);
+    event->userMode = 1-event->userMode ;
+
+    if(event->userMode==0){
+        if(event->wholeTimer->isActive()==false)
+            event->wholeTimer->start(100);
+    }
+    else
+       event->wholeTimer->stop();
 }
 
 void Widget::on_next_btn_clicked()
@@ -33,10 +38,14 @@ void Widget::on_next_btn_clicked()
         event->wholeTimer->start(100);
 }
 
-void Widget::on_pause_btn_clicked()
+void Widget::on_restart_btn_clicked()
 {
     Event * event = Event::getEvent();
     event->userMode = 1;
+    event->wholeTimer->stop();
+
+    SortAlgorithm::getInstance()->restart();
+
 }
 
 /*
@@ -58,16 +67,24 @@ void Widget::on_pause_btn_clicked()
 void Widget::on_random_btn_clicked()
 {
     int num=0;
+    Event * event = Event::getEvent();
+    event->userMode = 1;
+    event->wholeTimer->stop();
+    event->swapTimer->stop();
 
     if(ui->num_text->text().isEmpty()==false){
         num = ui->num_text->text().toInt();
     }
-    Processor::getProcessor()->resetProcessor(num);
+    SortAlgorithm::getInstance()->resetAlgorithm(num);
 }
 
 void Widget::on_reset_btn_clicked()
 {
     int num=0;
+    Event * event = Event::getEvent();
+    event->userMode = 1;
+    event->wholeTimer->stop();
+    event->swapTimer->stop();
     int * array = nullptr ;
     if(ui->num_text->text().isEmpty()==false){
         num = ui->num_text->text().toInt();
@@ -87,5 +104,5 @@ void Widget::on_reset_btn_clicked()
             array[counter] = qrand()%20+5;
         num = num==0? std::min(std::max(validlength,2),10):num;
     }
-    Processor::getProcessor()->resetProcessor(num,array);
+    SortAlgorithm::getInstance()->resetAlgorithm(num,array);
 }

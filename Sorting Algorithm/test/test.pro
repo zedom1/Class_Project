@@ -30,8 +30,9 @@ SOURCES += \
     item.cpp \
     record.cpp \
     recordlist.cpp \
-    processor.cpp \
-    event.cpp
+    event.cpp \
+    sortalgorithm.cpp \
+    selectionsort.cpp
 
 HEADERS += \
         widget.h \
@@ -39,8 +40,9 @@ HEADERS += \
     item.h \
     record.h \
     recordlist.h \
-    processor.h \
-    event.h
+    event.h \
+    sortalgorithm.h \
+    selectionsort.h
 
 FORMS += \
         widget.ui

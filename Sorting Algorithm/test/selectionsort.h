@@ -4,6 +4,7 @@
 #include "item.h"
 #include "recordlist.h"
 #include "widget.h"
+#include "sortalgorithm.h"
 //#include <QWidget>
 #include "event.h"
 #include <iostream>
@@ -13,14 +14,14 @@
 #include <QObject>
 #include <QtWidgets>
 
-class Processor: public QObject
+class SelectionSort : public QObject, public SortAlgorithm
 {
 
 public:
-    static Processor* getProcessor(Widget * widget = NULL);
+    static SelectionSort* getInstance(Widget * widget = NULL);
     static const int totalCount = 20;
-    Processor* resetProcessor(int num, int * array = nullptr);
-    ~Processor();
+    virtual SelectionSort* resetAlgorithm(int num=0, int * array = nullptr);
+    ~SelectionSort();
 
     Item ** itemList = NULL;
     int numItem;
@@ -32,23 +33,23 @@ public:
     void addItem();
     void handleArray(int *array);
     void swap();
+    void restart();
     void getRecord();
     void handleRecord();
-    //static Widget * getWidget();
     static QGraphicsScene *scene;
 
 private:
-    Processor( Widget * widget = NULL, int num=0, int*array=nullptr );
-    static Processor *processor;
+    SelectionSort( Widget * widget = nullptr, int num=0, int*array=nullptr );
+    static SelectionSort *selectionSort;
     static Widget * wid;
 
 
     class Cleaner{
     public:
         ~Cleaner() {
-            if (Processor::processor){
-                delete Processor::processor;
-                Processor::processor = nullptr;
+            if (SelectionSort::selectionSort){
+                delete SelectionSort::selectionSort;
+                SelectionSort::selectionSort = nullptr;
             }
         }
     };
@@ -57,7 +58,5 @@ private:
 private slots:
     void update();
 };
-
-void sleep(unsigned int msec);
 
 #endif // OPERATOR_H

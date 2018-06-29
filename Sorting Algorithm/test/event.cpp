@@ -6,7 +6,7 @@ Event::Event()
 {
     swapTimer = new QTimer();
     wholeTimer = new QTimer();
-    userMode = 0;
+    userMode = 1;
     //wholeTimer2 = new QTimer();
 }
 

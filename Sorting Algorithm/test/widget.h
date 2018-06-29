@@ -22,7 +22,7 @@ private slots:
 
     void on_next_btn_clicked();
 
-    void on_pause_btn_clicked();
+    void on_restart_btn_clicked();
 
     void on_random_btn_clicked();
 

@@ -36,12 +36,15 @@ void RecordList::addRecord(int type, int a1, int a2)
     }
 }
 
-void RecordList::move(int mod)
+Record * RecordList::move(int mod)
 {
     if(mod==0)
-        current = current->succ;
+        //if(current->succ != trailer)
+            current = current->succ;
     else
-        current = current->pred;
+        //if(current->pred != header)
+            current = current->pred;
+    return current;
 }
 
 RecordList::~RecordList()
@@ -73,3 +76,14 @@ bool RecordList::empty()
 {
     return size==0;
 }
+
+bool RecordList::atHeader()
+{
+    return current==header;
+}
+
+bool RecordList::atTrailer()
+{
+    return current==trailer;
+}
+

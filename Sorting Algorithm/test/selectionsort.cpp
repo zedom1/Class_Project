@@ -1,16 +1,16 @@
-#include "processor.h"
+#include "selectionsort.h"
 
-Processor * Processor::processor = nullptr;
-Widget * Processor::wid = nullptr;
-QGraphicsScene * Processor::scene = nullptr;
+SelectionSort * SelectionSort::selectionSort = nullptr;
+Widget * SelectionSort::wid = nullptr;
+QGraphicsScene * SelectionSort::scene = nullptr;
 
 /*
- * Processor的构造函数
+ * SelectionSort的构造函数
  * 核心思想：每一个待排序的数组对应一个processor，若数组更新则删掉旧的，换成新的processor
  * 每个processor有自己的scene、recordlist
  * widget作为公用参数，在main里面生成，在这里仅用指针指向它用于向scene里添加
  */
-Processor::Processor(Widget * widget, int num, int*array)
+SelectionSort::SelectionSort(Widget * widget, int num, int*array)
 {
     numItem = (num==0)? qrand()%9+2 : num;
     count = 0;
@@ -24,8 +24,8 @@ Processor::Processor(Widget * widget, int num, int*array)
     addItem();
 
     Event * event = Event::getEvent();
-    connect(event->swapTimer,&QTimer::timeout, this,&Processor::swap);
-    connect(event->wholeTimer, &QTimer::timeout, this, &Processor::handleRecord);
+    connect(event->swapTimer,&QTimer::timeout, this,&SelectionSort::swap);
+    connect(event->wholeTimer, &QTimer::timeout, this, &SelectionSort::handleRecord);
 
 }
 
@@ -38,7 +38,7 @@ Processor::Processor(Widget * widget, int num, int*array)
  *      最大最小值归一化： 找到数组的最大值和最小值，（每个元素-最小值+1） / （最大值-最小值）
  *      得到的数字在（ 0， 1.几 ）之间， 作为长度的放缩比例
  */
-void Processor::handleArray(int *array)
+void SelectionSort::handleArray(int *array)
 {
     int minx = 100;
     int maxn = 0;
@@ -68,16 +68,16 @@ void Processor::handleArray(int *array)
     delete []temarray;
 }
 
-// Processor使用单例模式，此为获得类唯一实例的接口
-Processor* Processor::getProcessor(Widget * widget)
+// SelectionSort使用单例模式，此为获得类唯一实例的接口
+SelectionSort* SelectionSort::getInstance(Widget * widget)
 {
-    if(processor == nullptr)
-        processor = new Processor(widget);
-    return processor;
+    if(selectionSort == nullptr)
+        selectionSort = new SelectionSort(widget);
+    return selectionSort;
 }
 
 // 用户重新设定数组或重新随机初始化之后要调用的函数
-Processor* Processor::resetProcessor(int num, int * array)
+SelectionSort* SelectionSort::resetAlgorithm(int num, int * array)
 {
     for(int i=0; i<numItem; i++){
         scene->removeItem(itemList[i]->rect);
@@ -91,17 +91,17 @@ Processor* Processor::resetProcessor(int num, int * array)
     getRecord();
     addItem();
 
-    return processor;
+    return selectionSort;
 }
 
 // 向scene里面添加item
 // 要先加widget 即背景、按钮那些，再加矩形、文本等
 // 不然widget会把它们覆盖掉
-void Processor::addItem(){
+void SelectionSort::addItem(){
     if(scene == nullptr){
         scene = new QGraphicsScene;
         scene->setSceneRect(0,0,1200,700);
-        connect(scene, &QGraphicsScene::changed, this, &Processor::update);
+        connect(scene, &QGraphicsScene::changed, this, &SelectionSort::update);
         scene->addWidget(wid);
     }
     for(int i=0; i<numItem; ++i){
@@ -110,7 +110,7 @@ void Processor::addItem(){
     }
 }
 
-void Processor::update()
+void SelectionSort::update()
 {
     this->scene->update(this->scene->sceneRect());
 }
@@ -118,14 +118,14 @@ void Processor::update()
 // swap定时器触发之后调用
 // 每次移动一小点，count记录当前移动小步的次数
 // totalCount记录总共要移动小步的次数
-void Processor::swap()
+void SelectionSort::swap()
 {
     if(count==0){
         itemList[index1]->rect->setColorMode(Rect::SWAP);
         itemList[index2]->rect->setColorMode(Rect::SWAP);
     }
     count++;
-    if(count<totalCount){
+    if(count<=totalCount){
         //std::cout<<1111<<std::endl;
         Item *item1 = itemList[index1];
         Item *item2 = itemList[index2];
@@ -143,16 +143,40 @@ void Processor::swap()
     }
 }
 
+void SelectionSort::restart()
+{
+    //Record * temrecord = recordList->current;
+    Record * current = recordList->move(1);
+    Item * tem;
+    int index1, index2;
+    while(-1!=current->type){
+        if(current->type==1){
+            index1 = current->attribute1;
+            index2 = current->attribute2;
+            itemList[index1]->move((40*1.0*(index2-index1)*1.0), 0);
+            itemList[index2]->move((40*1.0*(index1-index2)*1.0), 0);
+            tem = itemList[index1];
+            itemList[index1] = itemList[index2];
+            itemList[index2] = tem;
+        }
+        current = recordList->move(1);
+    }
+    recordList->move();
+    for(int i=0; i<numItem; i++)
+        itemList[i]->rect->setColorMode(Rect::NORMAL);
+    update();
+}
+
 // 实现排序算法的核心函数
 // 核心思想：
 //      额外开一个数组复制原本内容，使用排序算法对这个数组进行排序，同时记录中间步骤
 //      在用户设定好数组后记录就生成了，剩下的演示只是读取生成的记录
-void Processor::getRecord()
+void SelectionSort::getRecord()
 {
     //if(!recordList->empty())
     //    return;
-    int maxn = 0;
-    int maxindex = 0;
+    int minx = 0;
+    int minindex = 0;
     //std::cout<<222<<std::endl;
     int * temarray = new int[numItem];
     int tem;
@@ -160,22 +184,22 @@ void Processor::getRecord()
         temarray[i] = itemList[i]->num;
 
     for(int i=0; i<numItem; i++){
-        maxn = temarray[i];
-        maxindex = i;
+        minx = temarray[i];
+        minindex = i;
         recordList->addRecord(0,2,i);
         for(int j=i+1; j<numItem; j++){
             recordList->addRecord(0,1,j);
-            if(temarray[j] < maxn){
-                recordList->addRecord(0,0,maxindex);
-                maxn = temarray[j];
-                maxindex = j;
+            if(temarray[j] < minx){
+                recordList->addRecord(0,0,minindex);
+                minx = temarray[j];
+                minindex = j;
                 recordList->addRecord(0,2,j);               
             }
         }
         recordList->addRecord(0,3,numItem-1);
-        recordList->addRecord(1,i,maxindex);
-        tem = temarray[maxindex];
-        temarray[maxindex] = temarray[i];
+        recordList->addRecord(1,i,minindex);
+        tem = temarray[minindex];
+        temarray[minindex] = temarray[i];
         temarray[i] = tem;
     }
     delete []temarray;
@@ -197,7 +221,7 @@ void Processor::getRecord()
  *              3：若矩形不是最小，则恢复成正常颜色
  *          attribute 1： 矩形的index
  */
-void Processor::handleRecord()
+void SelectionSort::handleRecord()
 {
     //return;
     Event * event = Event::getEvent();
@@ -248,7 +272,7 @@ void Processor::handleRecord()
     }
 }
 
-Processor::~Processor()
+SelectionSort::~SelectionSort()
 {
     if(itemList){
         for(int i=0; i<numItem; i++)

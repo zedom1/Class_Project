@@ -1,4 +1,4 @@
-#include "processor.h"
+#include "selectionsort.h"
 #include "widget.h"
 #include "rect.h"
 #include <QApplication>
@@ -12,12 +12,13 @@ int main(int argc, char *argv[])
 
     Widget *w = new Widget();
     QGraphicsView *view = new QGraphicsView;
-    Processor *op = Processor::getProcessor(w);
 
+    SortAlgorithm::setAlgorithm(SelectionSort::getInstance(w));
+    SortAlgorithm * algo = SortAlgorithm::getInstance();
     w->resize(1200,700);
     w->setStyleSheet("background-color:white;");
 
-    view->setScene(op->scene);
+    view->setScene(((SelectionSort*)algo)->scene);
     view->show();
 
     return a.exec();
