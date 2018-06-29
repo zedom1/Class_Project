@@ -1,4 +1,10 @@
+## 课程、实验开发小项目记录
 
+Part1: Java 练手代码		(java+fx)
+Part2: lexical analysis	(java)
+Part3: Bank System		(java+fx)
+Part4: Movie System		(java+fx)
+Part5: Sorting Algorithm(c++ + Qt)
 
 ### Java 练手代码
 
@@ -43,7 +49,7 @@
 
 待补充。。。
 
-### UML
+### Movie System
 
 综述：
 
