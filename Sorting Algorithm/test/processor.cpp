@@ -3,6 +3,13 @@
 Processor * Processor::processor = NULL;
 Widget * Processor::wid = NULL;
 
+
+/*
+ * Processor的构造函数
+ * 核心思想：每一个待排序的数组对应一个processor，若数组更新则删掉旧的，换成新的processor
+ * 每个processor有自己的scene、recordlist
+ * widget作为公用参数，在main里面生成，在这里仅用指针指向它用于向scene里添加
+ */
 Processor::Processor(Widget * widget, int num, int*array)
 {
     scene = new QGraphicsScene;
@@ -15,22 +22,27 @@ Processor::Processor(Widget * widget, int num, int*array)
         delete recordList;
     recordList = new RecordList();
     getRecord();
-    std::cout<<numItem<<std::endl;
-    counter = new QTimer(this);
-    connect(counter,&QTimer::timeout, this,&Processor::swap);
-    //counter->start(60);
-    //view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     scene->setSceneRect(0,0,1200,700);
     connect(scene, &QGraphicsScene::changed, this, &Processor::update);
 
     addItem();
 
-    QTimer *c1 = new QTimer(this);
-    c1->start(1000);
-    connect(c1, &QTimer::timeout, this, &Processor::handleRecord);
+    Event * event = Event::getEvent();
+    connect(event->swapTimer,&QTimer::timeout, this,&Processor::swap);
+    connect(event->wholeTimer, &QTimer::timeout, this, &Processor::handleRecord);
+
 }
 
+/*
+ * handleArray：
+ *      根据输入的数组初始化矩形和文本
+ *      如果输入数组为空则根据numItem随机生成数组内容
+ *
+ *  数组处理：
+ *      最大最小值归一化： 找到数组的最大值和最小值，（每个元素-最小值+1） / （最大值-最小值）
+ *      得到的数字在（ 0， 1.几 ）之间， 作为长度的放缩比例
+ */
 void Processor::handleArray(int *array)
 {
     int minx = 100;
@@ -55,13 +67,14 @@ void Processor::handleArray(int *array)
     }
 
     for(int i=0; i<numItem; i++){
-        int aa = (int)((temarray[i]-minx+1)*1.0/(maxn-minx)*110);
+        double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx)*110);
         itemList[i] = new Item(temarray[i],i, aa);
         //std::cout<<aa<<std::endl;
     }
     delete []temarray;
 }
 
+// Processor使用单例模式，此为获得类唯一实例的接口
 Processor* Processor::getProcessor(Widget * widget)
 {
     if(processor == nullptr)
@@ -69,6 +82,7 @@ Processor* Processor::getProcessor(Widget * widget)
     return processor;
 }
 
+// 用户重新设定数组或重新随机初始化之后要调用的函数
 Processor* Processor::resetProcessor(int num, int * array)
 {
     if(processor!= nullptr)
@@ -79,6 +93,9 @@ Processor* Processor::resetProcessor(int num, int * array)
     return processor;
 }
 
+// 向scene里面添加item
+// 要先加widget 即背景、按钮那些，再加矩形、文本等
+// 不然widget会把它们覆盖掉
 void Processor::addItem(){
     scene->addWidget(wid);
     for(int i=0; i<numItem; ++i){
@@ -92,21 +109,9 @@ void Processor::update()
     this->scene->update(this->scene->sceneRect());
 }
 
-void Processor::timerUpdate()
-{
-    //return;
-    count++;
-    if(count<totalCount){
-        if(itemList[0]->rect->pos().x()<300){
-            itemList[0]->move(5,0);
-        }
-    }
-    else{
-        counter->stop();
-        count = 0;
-    }
-}
-
+// swap定时器触发之后调用
+// 每次移动一小点，count记录当前移动小步的次数
+// totalCount记录总共要移动小步的次数
 void Processor::swap()
 {
     if(count==0){
@@ -118,12 +123,12 @@ void Processor::swap()
         //std::cout<<1111<<std::endl;
         Item *item1 = itemList[index1];
         Item *item2 = itemList[index2];
-        item1->move( (40*(index2-index1)*1.0)/totalCount, 0 );
-        item2->move( (40*(index1-index2)*1.0)/totalCount, 0 );
+        item1->move( (40*1.0*(index2-index1)*1.0)/totalCount, 0 );
+        item2->move( (40*1.0*(index1-index2)*1.0)/totalCount, 0 );
     }
     else{
-        counter->stop();
         count = 0;
+        Event::getEvent()->swapTimer->stop();
         itemList[index1]->rect->setColorMode(Rect::NORMAL);
         itemList[index2]->rect->setColorMode(Rect::NORMAL);
         Item * tem = itemList[index1];
@@ -132,6 +137,10 @@ void Processor::swap()
     }
 }
 
+// 实现排序算法的核心函数
+// 核心思想：
+//      额外开一个数组复制原本内容，使用排序算法对这个数组进行排序，同时记录中间步骤
+//      在用户设定好数组后记录就生成了，剩下的演示只是读取生成的记录
 void Processor::getRecord()
 {
     //if(!recordList->empty())
@@ -166,9 +175,28 @@ void Processor::getRecord()
     delete []temarray;
 }
 
+// 演示的核心函数
+/*      使用两个timer：
+ *          wholeTimer记录上一步到下一步的时间
+ *          swapTimer记录交换的时间
+ * 记录：
+ *      type 1 ： 交换模式
+ *          attribute1、2：要交换的两个矩形的index
+ *
+ *      type 0 ： 上色模式
+ *          attribute 0： 颜色模式
+ *              0：恢复正常颜色
+ *              1：此时矩形被选中，设为选中颜色，若前一个矩形不是最大的，则将前一个矩形恢复成普通颜色（为了去掉上一个矩形的被选中颜色）
+ *              2：此时矩形是当前最小，设为最小颜色
+ *              3：若矩形不是最小，则恢复成正常颜色
+ *          attribute 1： 矩形的index
+ */
 void Processor::handleRecord()
 {
     //return;
+    Event * event = Event::getEvent();
+    event->wholeTimer->stop();
+
     Record* record = recordList->current;
     if( !record || record->type==-1 ){
         //std::cout<<"empty"<<std::endl;
@@ -176,18 +204,23 @@ void Processor::handleRecord()
     }
     //std::cout<<11<<std::endl;
     recordList->move();
+
     if(record->type==1){
+        if(event->userMode==0)
+            event->wholeTimer->start(1000);
         index1 = record->attribute1;
         index2 = record->attribute2;
-        counter->start(20);
-        //sleep(60);
+        event->swapTimer->start(40);
     }
-    /*  0: normal color
+    /*
+     *  0: normal color
      *  1: compare color
      *  2: maxn color
      *  3: if not maxn, then normal color
     */
     else{
+        if(event->userMode==0)
+            event->wholeTimer->start(400);
         Rect * item = itemList[record->attribute2]->rect;
         switch(record->attribute1){
         case 0:
@@ -206,7 +239,6 @@ void Processor::handleRecord()
                 item->setColorMode(Rect::NORMAL);
             break;
         }
-        //sleep(100);
     }
 }
 
@@ -223,13 +255,4 @@ Processor::~Processor()
         delete scene;
     if(recordList)
         delete recordList;
-    if(counter)
-        delete counter;
-}
-
-void sleep(unsigned int msec)
-{
-    QTime reachTime = QTime::currentTime().addMSecs(msec);
-    while(reachTime<QTime::currentTime())
-        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
 }

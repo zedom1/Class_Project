@@ -19,7 +19,7 @@ void RecordList::addRecord(Record * record)
     trailer->pred = record;
     size++;
     if(size==1){
-        std::cout<<"set current\n";
+        //std::cout<<"set current\n";
         current = record;
     }
 }

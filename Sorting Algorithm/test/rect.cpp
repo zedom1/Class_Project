@@ -9,7 +9,7 @@ Rect::Rect()
     colorMode = NORMAL;
 }
 
-Rect::Rect(int x, int y, int l=100)
+Rect::Rect(double x, double y, double l=100.0)
 {
     width = 50;
     length = l;

@@ -13,7 +13,7 @@ class Rect : public QGraphicsItem
 
 public:
     Rect();
-    Rect(int x, int y, int l);
+    Rect(double x, double y, double l);
     QRectF boundingRect() const;
 
     enum selectMode {NORMAL, SELECTED, MAXN, SWAP} ;

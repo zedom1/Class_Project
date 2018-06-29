@@ -4,12 +4,10 @@
 #include "item.h"
 #include "recordlist.h"
 #include "widget.h"
+#include "event.h"
 #include <iostream>
 #include <algorithm>
-#include <QTime>
 #include <QApplication>
-#include <QTimer>
-#include <QTimerEvent>
 #include <QtCore>
 #include <QObject>
 #include <QtWidgets>
@@ -20,7 +18,7 @@ class Processor: public QObject
 
 public:
     static Processor* getProcessor(Widget * widget = NULL);
-    static const int totalCount = 15;
+    static const int totalCount = 20;
     Processor* resetProcessor(int num, int * array);
     ~Processor();
 
@@ -28,7 +26,6 @@ public:
     int numItem;
     QGraphicsScene *scene = NULL;
     RecordList * recordList = NULL;
-    QTimer *counter = NULL;
     int id;
     int count;
     int index1,index2;
@@ -46,7 +43,6 @@ private:
     static Widget * wid;
 
 private slots:
-    void timerUpdate();
     void update();
 };
 

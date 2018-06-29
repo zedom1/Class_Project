@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
     w->setStyleSheet("background-color:white;");
 
     view->setScene(op->scene);
-
     view->show();
 
     return a.exec();

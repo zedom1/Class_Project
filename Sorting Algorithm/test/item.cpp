@@ -2,9 +2,9 @@
 
 Item::Item(int num, int index, int aa)
 {
-    this->rect = new Rect( 200+40*index , 120, aa );
+    this->rect = new Rect( 200.0+40.0*index , 120.0, aa*1.0 );
     this->text = new QGraphicsTextItem(QString::number(num));
-    text->setPos(410+80*index,260);
+    text->setPos(410.0+80.0*index,260.0);
     QFont font("Arial");
     font.setPointSizeF(15.0);
     text->setFont(font);
