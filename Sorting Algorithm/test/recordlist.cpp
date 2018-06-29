@@ -26,8 +26,14 @@ void RecordList::addRecord(Record * record)
 
 void RecordList::addRecord(int type, int a1, int a2)
 {
-    Record * r = new Record(type, a1, a2);
-    addRecord(r);
+    Record * r = new Record(type, a1, a2,trailer->pred,trailer);
+    this->trailer->pred->succ = r;
+    this->trailer->pred = r;
+    this->size++;
+    if(this->size==1){
+        //std::cout<<"set current\n";
+        this->current = r;
+    }
 }
 
 void RecordList::move(int mod)
@@ -49,13 +55,18 @@ RecordList::~RecordList()
 
 void RecordList::clear()
 {
+    if(empty())
+        return;
     Record* t1 = header->succ;
     Record* t2 = t1->succ;
-    while(t1!=trailer){
+    while( t1!=trailer && t2!=nullptr ){
         delete t1;
         t1 = t2;
         t2 = t2->succ;
     }
+    header->succ = trailer;
+    trailer->pred = header;
+    size = 0;
 }
 
 bool RecordList::empty()

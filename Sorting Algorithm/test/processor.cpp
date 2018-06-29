@@ -1,8 +1,8 @@
 #include "processor.h"
 
-Processor * Processor::processor = NULL;
-Widget * Processor::wid = NULL;
-
+Processor * Processor::processor = nullptr;
+Widget * Processor::wid = nullptr;
+QGraphicsScene * Processor::scene = nullptr;
 
 /*
  * Processor的构造函数
@@ -12,8 +12,7 @@ Widget * Processor::wid = NULL;
  */
 Processor::Processor(Widget * widget, int num, int*array)
 {
-    scene = new QGraphicsScene;
-    numItem = (num==0)? qrand()%3+3 : num;
+    numItem = (num==0)? qrand()%9+2 : num;
     count = 0;
     if(widget)
         wid = widget;
@@ -22,10 +21,6 @@ Processor::Processor(Widget * widget, int num, int*array)
         delete recordList;
     recordList = new RecordList();
     getRecord();
-
-    scene->setSceneRect(0,0,1200,700);
-    connect(scene, &QGraphicsScene::changed, this, &Processor::update);
-
     addItem();
 
     Event * event = Event::getEvent();
@@ -53,14 +48,13 @@ void Processor::handleArray(int *array)
     {
         temarray = new int[numItem];
         for(int i=0; i<numItem; i++){
-            temarray[i] = qrand()%10+5;
+            temarray[i] = qrand()%20+5;
         }
     }
     else
         temarray = array;
     //std::cout<<numItem<<std::endl;
     for(int i=0; i<numItem; i++){
-
         minx = std::min(minx, temarray[i]);
         maxn = std::max(maxn, temarray[i]);
         //std::cout<<temarray[i]<<std::endl;
@@ -85,11 +79,18 @@ Processor* Processor::getProcessor(Widget * widget)
 // 用户重新设定数组或重新随机初始化之后要调用的函数
 Processor* Processor::resetProcessor(int num, int * array)
 {
-    if(processor!= nullptr)
-        delete processor;
-    processor = new Processor(Processor::wid, num, array);
-    if(!recordList->empty())
-        recordList->clear();
+    for(int i=0; i<numItem; i++){
+        scene->removeItem(itemList[i]->rect);
+        scene->removeItem(itemList[i]->text);
+        delete itemList[i];
+    }
+    delete [] itemList;
+    numItem = (num==0)? qrand()%9+2 : num;
+    handleArray(array);
+    recordList->clear();
+    getRecord();
+    addItem();
+
     return processor;
 }
 
@@ -97,7 +98,12 @@ Processor* Processor::resetProcessor(int num, int * array)
 // 要先加widget 即背景、按钮那些，再加矩形、文本等
 // 不然widget会把它们覆盖掉
 void Processor::addItem(){
-    scene->addWidget(wid);
+    if(scene == nullptr){
+        scene = new QGraphicsScene;
+        scene->setSceneRect(0,0,1200,700);
+        connect(scene, &QGraphicsScene::changed, this, &Processor::update);
+        scene->addWidget(wid);
+    }
     for(int i=0; i<numItem; ++i){
         scene->addItem(itemList[i]->rect);
         scene->addItem(itemList[i]->text);
@@ -244,8 +250,6 @@ void Processor::handleRecord()
 
 Processor::~Processor()
 {
-    if(processor)
-        delete processor;
     if(itemList){
         for(int i=0; i<numItem; i++)
             delete itemList[i];

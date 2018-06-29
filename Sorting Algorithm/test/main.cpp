@@ -1,6 +1,6 @@
+#include "processor.h"
 #include "widget.h"
 #include "rect.h"
-#include "processor.h"
 #include <QApplication>
 #include <QtWidgets>
 

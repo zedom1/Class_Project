@@ -15,6 +15,8 @@ Item::~Item()
 {
     if( rect != nullptr )
         delete rect;
+    if( text != nullptr )
+        delete text;
 }
 
 void Item::move(double x, double y)

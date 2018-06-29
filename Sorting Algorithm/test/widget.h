@@ -2,7 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
-//#include "processor.h"
+#include <QIntValidator>
 #include "event.h"
 
 namespace Ui {
@@ -23,6 +23,10 @@ private slots:
     void on_next_btn_clicked();
 
     void on_pause_btn_clicked();
+
+    void on_random_btn_clicked();
+
+    void on_reset_btn_clicked();
 
 private:
     Ui::Widget *ui;

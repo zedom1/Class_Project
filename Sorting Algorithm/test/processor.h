@@ -4,6 +4,7 @@
 #include "item.h"
 #include "recordlist.h"
 #include "widget.h"
+//#include <QWidget>
 #include "event.h"
 #include <iostream>
 #include <algorithm>
@@ -11,7 +12,6 @@
 #include <QtCore>
 #include <QObject>
 #include <QtWidgets>
-#include <QWidget>
 
 class Processor: public QObject
 {
@@ -19,14 +19,13 @@ class Processor: public QObject
 public:
     static Processor* getProcessor(Widget * widget = NULL);
     static const int totalCount = 20;
-    Processor* resetProcessor(int num, int * array);
+    Processor* resetProcessor(int num, int * array = nullptr);
     ~Processor();
 
     Item ** itemList = NULL;
     int numItem;
-    QGraphicsScene *scene = NULL;
     RecordList * recordList = NULL;
-    int id;
+
     int count;
     int index1,index2;
 
@@ -36,11 +35,24 @@ public:
     void getRecord();
     void handleRecord();
     //static Widget * getWidget();
+    static QGraphicsScene *scene;
 
 private:
     Processor( Widget * widget = NULL, int num=0, int*array=nullptr );
     static Processor *processor;
     static Widget * wid;
+
+
+    class Cleaner{
+    public:
+        ~Cleaner() {
+            if (Processor::processor){
+                delete Processor::processor;
+                Processor::processor = nullptr;
+            }
+        }
+    };
+    static Cleaner cn;
 
 private slots:
     void update();
