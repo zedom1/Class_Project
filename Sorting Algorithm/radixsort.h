@@ -7,10 +7,10 @@ class RadixSort : public QObject, public SortAlgorithm
 {
 
 public:
-    static RadixSort* getInstance(int mod = 0);
+    static RadixSort* getInstance();
     static const int totalCount = 10;
     virtual void remove();
-    virtual RadixSort* resetAlgorithm(int num=0, int * array = nullptr, int mod = 0);
+    virtual RadixSort* resetAlgorithm(int num=0, int * array = nullptr);
     ~RadixSort();
 
     ItemForR ** itemList = NULL;

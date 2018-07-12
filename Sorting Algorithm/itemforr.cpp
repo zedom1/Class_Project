@@ -30,9 +30,7 @@ ItemForR::ItemForR(int num, int index, int aa, int hight)
 
 ItemForR::~ItemForR()
 {
-    if( rect != nullptr )
         delete rect;
-    if( text != nullptr )
         delete text;
 }
 
@@ -40,9 +38,4 @@ void ItemForR::move(double x, double y)
 {
     rect->moveBy(x,y);
     text->moveBy(x*2,y*2);
-    /*
-    if(x>0.0)
-        text->moveBy(x+5,y);
-    else
-        text->moveBy(x-5,y);*/
 }

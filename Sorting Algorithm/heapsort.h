@@ -7,10 +7,10 @@
 class HeapSort: public QObject, public SortAlgorithm
 {
 public:
-    static HeapSort* getInstance(int mod = 0);
+    static HeapSort* getInstance();
     static const int totalCount=10;
     virtual void remove();
-    virtual HeapSort* resetAlgorithm(int num, int * array, int mod = 0 ) override;
+    virtual HeapSort* resetAlgorithm(int num, int * array) override;
     ~HeapSort();
 
     heapsortRect **items=NULL;

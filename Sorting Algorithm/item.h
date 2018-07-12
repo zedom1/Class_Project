@@ -6,6 +6,7 @@ class Item
 {
 public:
     Item(int num, int index, int aa);
+    Item();
     ~Item();
     Rect *rect;
     QGraphicsTextItem *text;

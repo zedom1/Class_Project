@@ -9,10 +9,10 @@ class QuickSort: public QObject,public SortAlgorithm
 {
 
 public:
-    static QuickSort* getInstance(int mod = 0);
+    static QuickSort* getInstance();
     static const int totalCount = 20;
     virtual void remove();
-    virtual QuickSort* resetAlgorithm(int num=0, int * array = nullptr, int mod = 0 );
+    virtual QuickSort* resetAlgorithm(int num=0, int * array = nullptr);
     ~QuickSort();
 
     Item ** itemList = NULL;

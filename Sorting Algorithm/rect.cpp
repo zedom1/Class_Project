@@ -4,7 +4,7 @@ Rect::Rect()
 {
     width = 50;
     length = 100;
-    this->setX(250);
+    this->setX(200);
     this->setY(50);
     colorMode = NORMAL;
 }

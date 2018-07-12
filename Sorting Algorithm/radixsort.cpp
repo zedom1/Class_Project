@@ -57,17 +57,17 @@ void RadixSort::handleArray(int *array)
             temarray[i]=array[i];
         }
     }
-    //std::cout<<numItem<<std::endl;
+
     for(int i=0; i<numItem; i++){
         minx = std::min(minx, temarray[i]);
         maxn = std::max(maxn, temarray[i]);
-        //std::cout<<temarray[i]<<std::endl;
+
     }
 
     for(int i=0; i<numItem; i++){
-        //double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx)*110);
+
         itemList[i] = new ItemForR(temarray[i],i, 30);
-        //std::cout<<aa<<std::endl;
+
     }
     delete []temarray;
 }
@@ -79,35 +79,32 @@ void RadixSort::remove()
 }
 
 // RadixSort使用单例模式，此为获得类唯一实例的接口
-RadixSort* RadixSort::getInstance(int mod)
+RadixSort* RadixSort::getInstance()
 {
-    if(radixsort == nullptr || mod==1)
+    if(radixsort == nullptr )
         radixsort = new RadixSort();
     return radixsort;
 }
 
 // 用户重新设定数组或重新随机初始化之后要调用的函数
-RadixSort* RadixSort::resetAlgorithm(int num, int * array, int mod)
+RadixSort* RadixSort::resetAlgorithm(int num, int * array)
 {
     Event * event = Event::getEvent();
     if(itemList)
     for(int i=0; i<numItem; i++){
         event->scene->removeItem(itemList[i]->rect);
         event->scene->removeItem(itemList[i]->text);
-        //delete itemList[i];
+        delete itemList[i];
     }
-    //delete [] itemList;
+    delete [] itemList;
     if(slotList)
     for(int i=0; i<10; i++){
         event->scene->removeItem(slotList[i]->rect);
         event->scene->removeItem(slotList[i]->text);
-        //delete slotList[i];
+        delete slotList[i];
     }
-    //delete [] slotList;
+    delete [] slotList;
     recordList->clear();
-
-    if(mod)
-        return nullptr;
 
     numItem = (num==0)? qrand()%9+2 : num;
     handleArray(array);
@@ -140,16 +137,16 @@ void RadixSort::swap()
 {
     count++;
     if(count<=totalCount){
-        //std::cout<<1111<<std::endl;
+
         ItemForR *item1 = itemList[index1];
         if(index2>=1000){ //move into slot
             item1->move( (40*1.0*(index2/1000-(item1->current%10) - 1)*1.0)/totalCount,
-                         (120+20*(index2%1000-(item1->current/10)))/totalCount );
+                         (40+20*(numItem/10)+20*(index2%1000-(item1->current/10)))/totalCount );
             item1->index=index2;
         }
-        else{ //remove from slot
+        else { //remove from slot
             item1->move( -(40*1.0*(item1->index/1000-index2%10 - 1)*1.0)/totalCount,
-                         (-120-20*(item1->index%1000-index2/10))/totalCount );
+                         (-(40+20*(numItem/10))-20*(item1->index%1000-index2/10))/totalCount );
             item1->current=index2;
         }
     }
@@ -259,16 +256,16 @@ void RadixSort::getRecord()
  */
 void RadixSort::handleRecord()
 {
-    //return;
+
     Event * event = Event::getEvent();
     event->wholeTimer->stop();
 
     Record* record = recordList->current;
     if( !record || record->type==-1 ){
-        //std::cout<<"empty"<<std::endl;
+
         return;
     }
-    //std::cout<<11<<std::endl;
+
     recordList->move();
 
     if(record->type==1){
@@ -315,7 +312,7 @@ RadixSort::~RadixSort()
         for(int i=0; i<numItem; i++){
             event->scene->removeItem(itemList[i]->rect);
             event->scene->removeItem(itemList[i]->text);
-            //delete itemList[i];
+            delete itemList[i];
         }
         delete []itemList;
     }

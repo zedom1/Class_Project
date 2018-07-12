@@ -2,6 +2,7 @@
 #define ITEMFORR_H
 #include "rect.h"
 #include <QGraphicsItem>
+
 class ItemForR
 {
 public:

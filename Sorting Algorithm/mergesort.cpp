@@ -49,17 +49,17 @@ void MergeSort::handleArray(int *array)
     }
     else
         temarray = array;
-    //std::cout<<numItem<<std::endl;
+
     for(int i=0; i<numItem; i++){
         minx = std::min(minx, temarray[i]);
         maxn = std::max(maxn, temarray[i]);
-        //std::cout<<temarray[i]<<std::endl;
+
     }
 
     for(int i=0; i<numItem; i++){
-        double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx)*110);
+        double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx+1)*110);
         itemList[i] = new Item(temarray[i],i, aa);
-        //std::cout<<aa<<std::endl;
+
     }
     delete []temarray;
 }
@@ -71,28 +71,25 @@ void MergeSort::remove()
 }
 
 // Processor使用单例模式，此为获得类唯一实例的接口
-MergeSort* MergeSort::getInstance(int mod)
+MergeSort* MergeSort::getInstance()
 {
-    if(mSort == nullptr || mod ==1)
+    if(mSort == nullptr)
         mSort = new MergeSort();
     return mSort;
 }
 
 // 用户重新设定数组或重新随机初始化之后要调用的函数
-MergeSort* MergeSort::resetAlgorithm(int num, int * array, int mod)
+MergeSort* MergeSort::resetAlgorithm(int num, int * array)
 {
     Event * event = Event::getEvent();
     if(itemList)
     for(int i=0; i<numItem; i++){
         event->scene->removeItem(itemList[i]->rect);
         event->scene->removeItem(itemList[i]->text);
-        //delete itemList[i];
+        delete itemList[i];
     }
-    //delete [] itemList;
+    delete [] itemList;
     recordList->clear();
-
-    if(mod)
-        return nullptr;
 
     numItem = (num==0)? qrand()%9+2 : num;
     handleArray(array);
@@ -126,7 +123,7 @@ void MergeSort::swap()
     }
     count++;
     if(count<=totalCount){
-        //std::cout<<1111<<std::endl;
+
         Item *item1 = itemList[index1];
         Item *item2 = itemList[index2];
         item1->move( (40*1.0*(index2-index1)*1.0)/totalCount, 0 );
@@ -135,8 +132,6 @@ void MergeSort::swap()
     else{
         count = 0;
         Event::getEvent()->swapTimer->stop();
-      //  itemList[index1]->rect->setColorMode(Rect::NORMAL);
-      //  itemList[index2]->rect->setColorMode(Rect::NORMAL);
         Item * tem = itemList[index1];
         itemList[index1] = itemList[index2];
         itemList[index2] = tem;
@@ -150,21 +145,20 @@ void MergeSort::merge()
     }
     count++;
     if(count<totalCount){
-        //std::cout<<1111<<std::endl;
         Item *item1 = itemList[index1];
-        //Item *item2 = itemList[index2];
-      //  if(index2>index1)
+      //Item *item2 = itemList[index2];
+      //if(index2>index1)
             item1->move( (40*1.0*(index2-index1)*1.0)/totalCount, -100*1.0/totalCount );
     }
     if(count==totalCount){
         Item *item1 = itemList[index1];
         //Item *item2 = itemList[index2];
-        //  if(index2>index1)
-        item1->move( (40*1.0*(index2-index1)*1.0)/totalCount, -100*1.0/totalCount );
+      //  if(index2>index1)
+            item1->move( (40*1.0*(index2-index1)*1.0)/totalCount, -100*1.0/totalCount );
         count = 0;
         Event::getEvent()->mergeTimer->stop();
         itemList[index1]->rect->setColorMode(Rect::NORMAL);
-        //  itemList[index2]->rect->setColorMode(Rect::NORMAL);
+      //  itemList[index2]->rect->setColorMode(Rect::NORMAL);
     }
 }
 void MergeSort::moveDown()
@@ -196,9 +190,9 @@ void MergeSort::moveDown()
 //对数组按序归并
 void MergeSort::restart()
 {
-    //Record * temrecord = recordList->current;
+
     Record * current = recordList->move(1);
-    // Item * tem;
+
     int index1, index2;
     while(-1!=current->type){
         if(current->type==3){
@@ -213,7 +207,7 @@ void MergeSort::restart()
         {
             index1 = current->attribute1;
             index2 = current->attribute2;
-            itemList[index1]->move( -(40*1.0*(index2-index1)*1.0), 100*1.0);
+             itemList[index1]->move( -(40*1.0*(index2-index1)*1.0), 100*1.0);
 
         }
         if(current->type==5)
@@ -231,69 +225,68 @@ void MergeSort::restart()
     for(int i=0; i<numItem; i++)
         itemList[i]->rect->setColorMode(Rect::NORMAL);
 }
-
 void MergeSort::Sort(int *arr, int l, int m, int r,Item **tem)
 {
     int n1, n2, i, j, k;
-        int *left = NULL, *right = NULL;
-        Item ** temItemList = new Item* [r-l+1];
-        Item ** iniItemList = new Item* [r-l+1];
-        n1 = m - l + 1;
-        n2 = r - m;
-        left = (int *)malloc(sizeof(int) * (n1));
-        right = (int *)malloc(sizeof(int) * (n2));
-        for(int a=0;a<r-l+1;a++)
-        {
-            iniItemList[a]=tem[a+l];
+    int *left = NULL, *right = NULL;
+    Item ** temItemList = new Item* [r-l+1];
+    Item ** iniItemList = new Item* [r-l+1];
+    n1 = m - l + 1;
+    n2 = r - m;
+    left = (int *)malloc(sizeof(int) * (n1));
+    right = (int *)malloc(sizeof(int) * (n2));
+    for(int a=0;a<r-l+1;a++)
+    {
+        iniItemList[a]=tem[a+l];
+    }
+    for (i = 0; i < n1; i++)  //对左数组赋值
+    {
+        left[i] = arr[l + i];
+    }
+    for (j = 0; j < n2; j++)  //对右数组赋值
+    {
+        right[j] = arr[m + 1 + j];
+    }
+    i = j = 0;
+    k = l;
+    while (i < n1 && j < n2) //将数组元素值两两比较，并合并到arr数组
+    {
+        if (left[i] <= right[j])
+           {
+            recordList->addRecord(4,i+l,k);
+            temItemList[k-l]=tem[i+l];
+            arr[k++] = left[i++];//将第（i+l）个块放回第k个位置
+           // std::cout<<itemList[i+l]->num;
         }
-        for (i = 0; i < n1; i++)  //对左数组赋值
+        else
         {
-            left[i] = arr[l + i];
+            recordList->addRecord(4,m+1+j,k);
+            temItemList[k-l]=tem[m+1+j];
+            arr[k++] = right[j++];//将第（m+1+j）个块放回第k个位置
+           // std::cout<<itemList[i+l]->num;
         }
-        for (j = 0; j < n2; j++)  //对右数组赋值
-        {
-            right[j] = arr[m + 1 + j];
-        }
-        i = j = 0;
-        k = l;
-        while (i < n1 && j < n2) //将数组元素值两两比较，并合并到arr数组
-        {
-            if (left[i] <= right[j])
-               {
-                recordList->addRecord(4,i+l,k);
-                temItemList[k-l]=tem[i+l];
-                arr[k++] = left[i++];//将第（i+l）个块放回第k个位置
-               // std::cout<<itemList[i+l]->num;
-            }
-            else
-            {
-                recordList->addRecord(4,m+1+j,k);
-                temItemList[k-l]=tem[m+1+j];
-                arr[k++] = right[j++];//将第（m+1+j）个块放回第k个位置
-               // std::cout<<itemList[i+l]->num;
-            }
-        }
+    }
 
-        for (; i < n1; i++) //当左数组有元素剩余时,将剩余元素依次合并到arr数组
-        {
-             recordList->addRecord(4,i+l,k);
-             temItemList[k-l]=tem[i+l];
-            arr[k++] = left[i];
-           // std::cout<<temItemList[k-l]->num;
-        }
-        for (; j < n2; j++) //如果右数组有元素剩余，则将剩余元素依次合并到arr数组
-        {
-             recordList->addRecord(4,m+1+j,k);
-             temItemList[k-l]=tem[m+1+j];
-            arr[k++] = right[j];
-           // std::cout<<temItemList[k-l]->num;
-        }
-        for(int i=l;i<r+1;i++)
-        {
-            tem[i]=temItemList[i-l];
-        }
-        recordList->addRecord(5,l,r,temItemList,iniItemList);//getRecord完成-》tem是一个完全排序的数组！！
-        //delete []temItemList;
+    for (; i < n1; i++) //当左数组有元素剩余时,将剩余元素依次合并到arr数组
+    {
+         recordList->addRecord(4,i+l,k);
+         temItemList[k-l]=tem[i+l];
+        arr[k++] = left[i];
+       // std::cout<<temItemList[k-l]->num;
+    }
+    for (; j < n2; j++) //如果右数组有元素剩余，则将剩余元素依次合并到arr数组
+    {
+         recordList->addRecord(4,m+1+j,k);
+         temItemList[k-l]=tem[m+1+j];
+        arr[k++] = right[j];
+       // std::cout<<temItemList[k-l]->num;
+    }
+    for(int i=l;i<r+1;i++)
+    {
+        tem[i]=temItemList[i-l];
+    }
+    recordList->addRecord(5,l,r,temItemList,iniItemList);//getRecord完成-》tem是一个完全排序的数组！！
+    //delete []temItemList;
 }
 void MergeSort::mergeSort(int *arr, int left, int right,Item **tem)
 {
@@ -318,19 +311,21 @@ void MergeSort::mergeSort(int *arr, int left, int right,Item **tem)
 void MergeSort::getRecord()
 {
     int * temarray = new int[numItem];
+   // Item **ini=new Item*[numItem];
     Item **tem=new Item*[numItem];
     int *b=new int[numItem];
       for(int i=0; i<numItem ; i++)
       {
           temarray[i] = itemList[i]->num;
+         // ini[i]=itemList[i];
           tem[i]=itemList[i];
       }
       mergeSort(temarray,0,numItem-1,tem);
        delete []temarray;
       delete []b;
       delete []tem;
+      //delete []ini;
 }
-
 // 演示的核心函数
 /*      使用两个timer：
  *          wholeTimer记录上一步到下一步的时间
@@ -349,16 +344,15 @@ void MergeSort::getRecord()
  */
 void MergeSort::handleRecord()
 {
-    //return;
     Event * event = Event::getEvent();
     event->wholeTimer->stop();
 
     Record* record = recordList->current;
     if( !record || record->type==-1 ){
-        //std::cout<<"empty"<<std::endl;
+
         return;
     }
-    //std::cout<<11<<std::endl;
+
     recordList->move();
 
     if(record->type==1){
@@ -439,8 +433,6 @@ void MergeSort::handleRecord()
                 itemList[record->attribute2+1]->rect->setColorMode(Rect::NORMAL);
         case 7://已固定的轴值
             item->setColorMode(Rect::FINISHED);
-
-
         }
     }
     else
@@ -466,7 +458,7 @@ MergeSort::~MergeSort()
         for(int i=0; i<numItem; i++){
             event->scene->removeItem(itemList[i]->rect);
             event->scene->removeItem(itemList[i]->text);
-            //delete itemList[i];
+            delete itemList[i];
         }
         delete []itemList;
     }

@@ -10,10 +10,10 @@ class SelectionSort : public QObject, public SortAlgorithm
 {
 
 public:
-    static SelectionSort* getInstance(int mod = 0);
+    static SelectionSort* getInstance();
     static const int totalCount = 20;
     virtual void remove();
-    virtual SelectionSort* resetAlgorithm(int num=0, int * array = nullptr, int mod = 0 );
+    virtual SelectionSort* resetAlgorithm(int num=0, int * array = nullptr);
     ~SelectionSort();
 
     Item ** itemList = NULL;

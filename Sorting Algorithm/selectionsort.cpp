@@ -51,17 +51,14 @@ void SelectionSort::handleArray(int *array)
     }
     else
         temarray = array;
-    //std::cout<<numItem<<std::endl;
     for(int i=0; i<numItem; i++){
         minx = std::min(minx, temarray[i]);
         maxn = std::max(maxn, temarray[i]);
-        //std::cout<<temarray[i]<<std::endl;
     }
 
     for(int i=0; i<numItem; i++){
-        double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx)*110);
+        double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx+1)*110);
         itemList[i] = new Item(temarray[i],i, aa);
-        //std::cout<<aa<<std::endl;
     }
     delete []temarray;
 }
@@ -73,28 +70,26 @@ void SelectionSort::remove()
 }
 
 // SelectionSort使用单例模式，此为获得类唯一实例的接口
-SelectionSort* SelectionSort::getInstance(int mod)
+SelectionSort* SelectionSort::getInstance()
 {
-    if(selectionSort == nullptr||mod==1)
+    if(selectionSort == nullptr)
         selectionSort = new SelectionSort();
     return selectionSort;
 }
 
 // 用户重新设定数组或重新随机初始化之后要调用的函数
-SelectionSort* SelectionSort::resetAlgorithm(int num, int * array, int mod )
+SelectionSort* SelectionSort::resetAlgorithm(int num, int * array )
 {
     Event * event = Event::getEvent();
     if(itemList)
     for(int i=0; i<numItem; i++){
         event->scene->removeItem(itemList[i]->rect);
         event->scene->removeItem(itemList[i]->text);
-        //delete itemList[i];
+        delete itemList[i];
     }
-    //delete [] itemList;
+    delete [] itemList;
     recordList->clear();
 
-    if(mod)
-        return nullptr;
     numItem = (num==0)? qrand()%9+2 : num;
     handleArray(array);
     getRecord();
@@ -125,7 +120,6 @@ void SelectionSort::swap()
     }
     count++;
     if(count<=totalCount){
-        //std::cout<<1111<<std::endl;
         Item *item1 = itemList[index1];
         Item *item2 = itemList[index2];
         item1->move( (40*1.0*(index2-index1)*1.0)/totalCount, 0 );
@@ -144,7 +138,6 @@ void SelectionSort::swap()
 
 void SelectionSort::restart()
 {
-    //Record * temrecord = recordList->current;
     Record * current = recordList->move(1);
     Item * tem;
     int index1, index2;
@@ -171,11 +164,8 @@ void SelectionSort::restart()
 //      在用户设定好数组后记录就生成了，剩下的演示只是读取生成的记录
 void SelectionSort::getRecord()
 {
-    //if(!recordList->empty())
-    //    return;
     int minx = 0;
     int minindex = 0;
-    //std::cout<<222<<std::endl;
     int * temarray = new int[numItem];
     int tem;
     for(int i=0; i<numItem ; i++)
@@ -221,16 +211,13 @@ void SelectionSort::getRecord()
  */
 void SelectionSort::handleRecord()
 {
-    //return;
     Event * event = Event::getEvent();
     event->wholeTimer->stop();
 
     Record* record = recordList->current;
     if( !record || record->type==-1 ){
-        //std::cout<<"empty"<<std::endl;
         return;
     }
-    //std::cout<<11<<std::endl;
     recordList->move();
 
     if(record->type==1){
@@ -240,12 +227,6 @@ void SelectionSort::handleRecord()
         index2 = record->attribute2;
         event->swapTimer->start(40);
     }
-    /*
-     *  0: normal color
-     *  1: compare color
-     *  2: maxn color
-     *  3: if not maxn, then normal color
-    */
     else{
         if(event->userMode==0)
             event->wholeTimer->start(400);
@@ -277,7 +258,7 @@ SelectionSort::~SelectionSort()
         for(int i=0; i<numItem; i++){
             event->scene->removeItem(itemList[i]->rect);
             event->scene->removeItem(itemList[i]->text);
-            //delete itemList[i];
+            delete itemList[i];
         }
         delete []itemList;
     }

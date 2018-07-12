@@ -6,6 +6,7 @@ RecordList::RecordList()
     header = new Record();
     trailer = new Record();
     header->succ = trailer;
+    header->type = trailer->type = -1;
     trailer->pred = header;
     current = nullptr;
 }
@@ -18,6 +19,7 @@ void RecordList::addRecord(Record * record)
     trailer->pred = record;
     size++;
     if(size==1){
+        //std::cout<<"set current\n";
         current = record;
     }
 }
@@ -44,8 +46,8 @@ void RecordList::addRecord(int type, int a1, int a2,Item** a,Item** b)
         //std::cout<<"set current\n";
         this->current = r;
     }
-}
 
+}
 Record * RecordList::move(int mod)
 {
     if(mod==0)
@@ -80,7 +82,6 @@ void RecordList::clear()
     header->succ = trailer;
     trailer->pred = header;
     size = 0;
-    current = nullptr;
 }
 
 bool RecordList::empty()

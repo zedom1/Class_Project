@@ -7,10 +7,10 @@ class BubbleSort : public QObject, public SortAlgorithm
 {
 
 public:
-    static BubbleSort* getInstance(int mod = 0);
+    static BubbleSort* getInstance();
     static const int totalCount = 20;
     virtual void remove();
-    virtual BubbleSort* resetAlgorithm(int num=0, int * array = nullptr, int mod = 0 );
+    virtual BubbleSort* resetAlgorithm(int num=0, int * array = nullptr);
     ~BubbleSort();
 
     Item ** itemList = NULL;

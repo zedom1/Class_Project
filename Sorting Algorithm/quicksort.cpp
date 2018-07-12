@@ -48,17 +48,17 @@ void QuickSort::handleArray(int *array)
     }
     else
         temarray = array;
-    //std::cout<<numItem<<std::endl;
+
     for(int i=0; i<numItem; i++){
         minx = std::min(minx, temarray[i]);
         maxn = std::max(maxn, temarray[i]);
-        //std::cout<<temarray[i]<<std::endl;
+
     }
 
     for(int i=0; i<numItem; i++){
-        double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx)*110);
+        double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx+1)*110);
         itemList[i] = new Item(temarray[i],i, aa);
-        //std::cout<<aa<<std::endl;
+
     }
     delete []temarray;
 }
@@ -70,28 +70,26 @@ void QuickSort::remove()
 }
 
 // Processor使用单例模式，此为获得类唯一实例的接口
-QuickSort* QuickSort::getInstance(int mod)
+QuickSort* QuickSort::getInstance()
 {
-    if(qSort == nullptr || mod==1)
+    if(qSort == nullptr )
         qSort = new QuickSort();
     return qSort;
 }
 
 // 用户重新设定数组或重新随机初始化之后要调用的函数
-QuickSort* QuickSort::resetAlgorithm(int num, int * array, int mod)
+QuickSort* QuickSort::resetAlgorithm(int num, int * array)
 {
     Event * event = Event::getEvent();
     if(itemList)
     for(int i=0; i<numItem; i++){
         event->scene->removeItem(itemList[i]->rect);
         event->scene->removeItem(itemList[i]->text);
-        //delete itemList[i];
+        delete itemList[i];
     }
-    //delete [] itemList;
+    delete [] itemList;
     recordList->clear();
 
-    if(mod)
-        return nullptr;
     numItem = (num==0)? qrand()%9+2 : num;
     handleArray(array);
     getRecord();
@@ -123,7 +121,7 @@ void QuickSort::swap()
     }
     count++;
     if(count<=totalCount){
-        //std::cout<<1111<<std::endl;
+
         Item *item1 = itemList[index1];
         Item *item2 = itemList[index2];
         item1->move( (40*1.0*(index2-index1)*1.0)/totalCount, 0 );
@@ -141,7 +139,7 @@ void QuickSort::swap()
 }
 void QuickSort::restart()
 {
-    //Record * temrecord = recordList->current;
+
     Record * current = recordList->move(1);
     Item * tem;
     int index1, index2;
@@ -246,16 +244,16 @@ void QuickSort::getRecord()
  */
 void QuickSort::handleRecord()
 {
-    //return;
+
     Event * event = Event::getEvent();
     event->wholeTimer->stop();
 
     Record* record = recordList->current;
     if( !record || record->type==-1 ){
-        //std::cout<<"empty"<<std::endl;
+
         return;
     }
-    //std::cout<<11<<std::endl;
+
     recordList->move();
 
     if(record->type==1){
@@ -318,7 +316,7 @@ QuickSort::~QuickSort()
         for(int i=0; i<numItem; i++){
             event->scene->removeItem(itemList[i]->rect);
             event->scene->removeItem(itemList[i]->text);
-            //delete itemList[i];
+            delete itemList[i];
         }
         delete []itemList;
     }

@@ -7,10 +7,10 @@ class MergeSort: public QObject, public SortAlgorithm
 {
 
 public:
-    static MergeSort* getInstance(int mod = 0);
+    static MergeSort* getInstance();
     static const int totalCount = 20;
     virtual void remove();
-     virtual MergeSort* resetAlgorithm(int num=0, int * array = nullptr, int mod = 0 );
+     virtual MergeSort* resetAlgorithm(int num=0, int * array = nullptr);
     //Processor* resetProcessor(int num, int * array = nullptr);
     ~MergeSort();
 

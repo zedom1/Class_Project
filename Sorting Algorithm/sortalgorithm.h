@@ -6,7 +6,6 @@
 #include "heapsortrect.h"
 #include "recordlist.h"
 #include "event.h"
-
 #include <QApplication>
 #include <QtCore>
 #include <QObject>
@@ -22,10 +21,10 @@ protected:
     SortAlgorithm();
 public:
     static void setAlgorithm(SortAlgorithm* algo);
-    static SortAlgorithm* getInstance(int mod=0);
+    static SortAlgorithm* getInstance();
     virtual void restart()=0;
     virtual void remove()=0;
-    virtual SortAlgorithm* resetAlgorithm(int num=0, int * array=nullptr, int mod = 0)=0;
+    virtual SortAlgorithm* resetAlgorithm(int num=0, int * array=nullptr)=0;
 };
 
 #endif // SORTALGORITHM_H

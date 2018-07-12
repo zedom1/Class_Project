@@ -90,8 +90,6 @@ void Widget::reset()
     event->swapTimer->stop();
     event->view->hide();
     SortAlgorithm::getInstance()->remove();
-    //algo->resetAlgorithm(0,nullptr,1);
-
 }
 
 void Widget::on_pushButton_8_clicked()

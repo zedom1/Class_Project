@@ -18,10 +18,10 @@ class InsertionSort : public QObject, public SortAlgorithm
 {
 
 public:
-    static InsertionSort* getInstance(int mod = 0);
+    static InsertionSort* getInstance();
     static const int totalCount = 20;
     virtual void remove();
-    virtual InsertionSort* resetAlgorithm(int num=0, int * array = nullptr, int mod = 0 );
+    virtual InsertionSort* resetAlgorithm(int num=0, int * array = nullptr);
     ~InsertionSort();
 
     Item ** itemList = NULL;

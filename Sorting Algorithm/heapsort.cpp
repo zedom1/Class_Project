@@ -6,7 +6,7 @@ HeapSort::HeapSort(int num,int *array)
 {
 
     if(num==0)
-        this->num=1+qrand()%50;
+        this->num=10+qrand()%20;
     else
         this->num=num;
 
@@ -54,9 +54,9 @@ void HeapSort::remove()
     heapSort = nullptr;
 }
 
-HeapSort* HeapSort::getInstance(int mod)
+HeapSort* HeapSort::getInstance()
 {
-    if(heapSort == nullptr || mod ==1 )
+    if(heapSort == nullptr )
         heapSort = new HeapSort();
     return heapSort;
 }
@@ -110,30 +110,28 @@ void HeapSort::handleArray(int *arr)
 }
 
 
-HeapSort *HeapSort::resetAlgorithm(int num, int *array, int mod)
+HeapSort *HeapSort::resetAlgorithm(int num, int *array)
 {
     Event * event = Event::getEvent();
     if(items)
     for(int i=1;i<this->num+1;++i)
     {
         event->scene->removeItem(items[i]);
-        //delete items[i];
+        delete items[i];
     }
     if(lines)
     for(int i=2;i<this->num+1;++i)
     {
         event->scene->removeItem(lines[i]);
-        //delete lines[i];
+        delete lines[i];
     }
-   // delete [] items;
-    //delete [] lines;
+    delete [] items;
+    delete [] lines;
     recordList->clear();
-   // delete [] ar;
-   // delete [] initar;
-    if(mod)
-        return nullptr;
+    delete [] ar;
+    delete [] initar;
     if(num==0)
-        this->num=1+qrand()%50;
+        this->num=10+qrand()%20;
     else
         this->num=num;
 
@@ -366,26 +364,21 @@ HeapSort::~HeapSort()
     if(items)
     {
         Event * event = Event::getEvent();
-        for(int i=0; i<num; i++){
+        for(int i=1; i<num+1; i++){
             event->scene->removeItem(items[i]);
-            event->scene->removeItem(items[i]);
-            //delete itemList[i];
+            delete items[i];
         }
         delete []items;
     }
     if(lines)
     {
         Event * event = Event::getEvent();
-        for(int i=0;i<num+1;++i)
+        for(int i=2;i<num+1;++i){
             event->scene->removeItem(lines[i]);
-            //delete lines[i];
+            delete lines[i];
+        }
         delete [] lines;
     }
-    if(ar)
-        delete ar;
-    if(recordList)
-    {
-        recordList->~RecordList();
-        delete recordList;
-    }
+    delete ar;
+    delete recordList;
 }

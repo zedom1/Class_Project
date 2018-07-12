@@ -49,17 +49,17 @@ void InsertionSort::handleArray(int *array)
     }
     else
         temarray = array;
-    //std::cout<<numItem<<std::endl;
+
     for(int i=0; i<numItem; i++){
         minx = std::min(minx, temarray[i]);
         maxn = std::max(maxn, temarray[i]);
-        //std::cout<<temarray[i]<<std::endl;
+
     }
 
     for(int i=0; i<numItem; i++){
-        double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx)*110);
+        double aa = ((temarray[i]-minx+1)*1.0/(maxn-minx+1)*110);
         itemList[i] = new Item(temarray[i],i, aa);
-        //std::cout<<aa<<std::endl;
+
     }
     delete []temarray;
 }
@@ -71,28 +71,25 @@ void InsertionSort::remove()
 }
 
 // InsertionSort使用单例模式，此为获得类唯一实例的接口
-InsertionSort * InsertionSort::getInstance(int mod)
+InsertionSort * InsertionSort::getInstance()
 {
-    if(insertionSort == nullptr || mod==1)
+    if(insertionSort == nullptr)
         insertionSort = new InsertionSort();
     return insertionSort;
 }
 
 // 用户重新设定数组或重新随机初始化之后要调用的函数
-InsertionSort * InsertionSort::resetAlgorithm(int num, int * array, int mod)
+InsertionSort * InsertionSort::resetAlgorithm(int num, int * array)
 {
     Event * event = Event::getEvent();
     if(itemList)
     for(int i=0; i<numItem; i++){
         event->scene->removeItem(itemList[i]->rect);
         event->scene->removeItem(itemList[i]->text);
-        //delete itemList[i];
+        delete itemList[i];
     }
-    //delete [] itemList;
+    delete [] itemList;
     recordList->clear();
-
-    if(mod)
-        return nullptr;
 
     numItem = (num==0)? qrand()%9+2 : num;
     handleArray(array);
@@ -125,7 +122,7 @@ void InsertionSort::swap()
     }
     count++;
     if(count<=totalCount){
-        //std::cout<<1111<<std::endl;
+
         Item *item1 = itemList[index1];
         Item *item2 = itemList[index2];
         item1->move( (40*1.0*(index2-index1)*1.0)/totalCount, 0 );
@@ -144,7 +141,7 @@ void InsertionSort::swap()
 
 void InsertionSort::restart()
 {
-    //Record * temrecord = recordList->current;
+
     Record * current = recordList->move(1);
     Item * tem;
     int index1, index2;
@@ -171,11 +168,6 @@ void InsertionSort::restart()
 //      在用户设定好数组后记录就生成了，剩下的演示只是读取生成的记录
 void InsertionSort::getRecord()
 {
-    //if(!recordList->empty())
-    //    return;
-
-
-    //std::cout<<222<<std::endl;
     int * temarray = new int[numItem];
 
     for(int i=0; i<numItem ; i++)
@@ -203,7 +195,7 @@ void InsertionSort::getRecord()
                j--;
             }
             temarray[j+1]=val;
-           //
+
         }
     delete []temarray;
 }
@@ -226,16 +218,16 @@ void InsertionSort::getRecord()
  */
 void InsertionSort::handleRecord()
 {
-    //return;
+
     Event * event = Event::getEvent();
     event->wholeTimer->stop();
 
     Record* record = recordList->current;
     if( !record || record->type==-1 ){
-        //std::cout<<"empty"<<std::endl;
+
         return;
     }
-    //std::cout<<11<<std::endl;
+
     recordList->move();
 
     if(record->type==1){
@@ -281,10 +273,9 @@ InsertionSort::~InsertionSort()
         for(int i=0; i<numItem; i++){
             event->scene->removeItem(itemList[i]->rect);
             event->scene->removeItem(itemList[i]->text);
-            //delete itemList[i];
+            delete itemList[i];
         }
         delete []itemList;
     }
-    if(recordList)
-        delete recordList;
+    delete recordList;
 }

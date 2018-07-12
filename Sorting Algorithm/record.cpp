@@ -4,8 +4,6 @@ Record::Record()
 {
     pred = nullptr;
     succ = nullptr;
-    type = -1;
-    attribute1 = attribute2 = 0;
 }
 
 Record::Record(int type, int i1, int i2, Record* pre, Record* s)
@@ -35,4 +33,3 @@ Record::Record(int type,int i1,int i2,Item** a,Item**b)
     this->a=a;
      this->b=b;
 }
-
