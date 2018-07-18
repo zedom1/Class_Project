@@ -118,7 +118,7 @@ void List::insertionSort( ){
 
 ListNode * List::insertSingle( Memory start , Memory length){
 	ListNode * tem = header;
-	while(start < tem->start)
+    while(start >= tem->start)
 		tem = tem->succ;
 	_size++;
 	return tem->insertAsPred( tem, start , length );

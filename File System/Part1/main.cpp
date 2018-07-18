@@ -8,7 +8,7 @@ Identifier currentUser;
 UserOpenFile * currentUOF;
 MainFileDirectory * currentD;
 vector<UserOpenFile *> openFile;
-vector<pair<string, Identifier>> fd;
+vector< pair<string, Identifier> > fd;
 vector<MainFileDirectory *> mainMenu;
 /////////////////// 	Global Variable END	//////////////////
 //////////////////////////////////////////////////////////////
@@ -24,6 +24,11 @@ vector<string> split(const string &s,  string c);
 //////////////////////////////////////////////////////////////
 /////////////////// 	Global Function STA	//////////////////
 void init();
+void allWriteBack();
+void listFD();
+void listUOF();
+void listFile();
+void listOrder();
 void close(Identifier fileID);
 void deleteFile(string filename);
 Identifier open(string filename, OPERATION op);
@@ -49,6 +54,12 @@ void switchCurrentD(){
 	}
 }
 
+void allWriteBack(){
+    for(int i=0; i<MAXOPENFILE; i++){
+        currentD->writeBack(currentUOF->fileNode[i]);
+    }
+}
+
 void init(){
 	srand(time(0));
 	list = new List();
@@ -64,6 +75,68 @@ void init(){
 		openFile.push_back(new UserOpenFile(u->userID));
 	}
 	switchCurrentD();
+
+    listOrder();
+    listFile();
+}
+
+void listOrder(){
+    printf("==================================\n");
+    printf("Providing orders: \n");
+    printf("1. ls \t\t\t\t\t\t// list all the files.\n");
+    printf("2. listUOF \t\t\t\t\t// list the opened files.\n");
+    printf("3. listFD \t\t\t\t\t// list the file descriptors.\n");
+    printf("4. fd=create(filename, maxLength, protectWay); \t// create a file with filename,length and protect way. \n");
+    printf("5. write(fd, byteToWrite); \t\t\t// write a file with filename and bytes to write. \n");
+    printf("6. fd=open(filename, operation); \t\t// open a file with file name and operation \n");
+    printf("7. read(fd, byteToRead); \t\t\t// read a file with filename and bytes to read. \n");
+    printf("8. close(fd); \t\t\t\t\t// close the file according to the file descriptor. \n");
+    printf("9. delete(filename); \t\t\t\t// delete the file according to file name. \n");
+    printf("==================================\n");
+}
+
+void listUOF(){
+    printf("==================================\n");
+    printf("List User Open File:\n");
+    UserOpenFileNode * uofn = NULL;
+    for(int i=0; i<MAXOPENFILE; i++){
+        if(currentUOF->fileNode[i]->status!=INVALID){
+            uofn = currentUOF->fileNode[i];
+            printf("File ID: %d. \t File name: %s. \t Read Pointer: %d. \t Write Pointer: %d. \t Current Length: %d.\n",uofn->fileID,uofn->filename.c_str(),uofn->readPointer, uofn->writePointer, uofn->currentLength);
+        }
+    }
+    if(uofn==NULL){
+        printf("No Open File.\n");
+    }
+    printf("==================================\n");
+}
+
+void listFD(){
+    printf("==================================\n");
+    printf("List File Descriptors:\n");
+    if(fd.size()==0){
+        printf("No file descriptor.\n");
+        return;
+    }
+    for(int i=0; i<fd.size(); i++){
+        printf("File descriptor: %s. \t File id: %d.\n",fd[i].first.c_str(), fd[i].second);
+    }
+    printf("==================================\n");
+}
+
+void listFile(){
+    printf("==================================\n");
+    printf("List Files:\n");
+    vector<UserFileDirectory *> u = currentD->ufd;
+    if(u.size()==0){
+        printf("No File.\n");
+        return;
+    }
+    allWriteBack();
+    for(int i=0; i<u.size(); i++){
+        printf("File ID: %d. \tFile name: %s. \t Current Length: %d. \t Max Length: %d.\n",u[i]->fileID,u[i]->filename.c_str(),u[i]->currentLength, u[i]->maxLength);
+    }
+    printf("==================================\n");
 }
 
 vector<string> split(const string &s,  string c){
@@ -178,6 +251,18 @@ void releaseSpace(Memory start, Memory length){
 void handle(string order){
 	vector<string> v = split(order, "(");
 	if(v.size()<2){
+        if(v[0]=="ls"){
+            listFile();
+            return;
+        }
+        else if(v[0]=="listUOF"){
+            listUOF();
+            return;
+        }
+        else if(v[0]=="listFD"){
+            listFD();
+            return;
+        }
 		printf("Input error!\n");
 		return;
 	}
@@ -226,7 +311,7 @@ void handle(string order){
 				printf("Parameter error.\n");
 				return;
 			}
-			pair<string, Identifier> p1(fdstring, create(fdstring, atoi(v[1].c_str()), PROTECTION(atoi(v[2].c_str())) ));
+            pair<string, Identifier> p1(fdstring, create(v[0], atoi(v[1].c_str()), PROTECTION(atoi(v[2].c_str())) ));
 			fd.push_back(p1);
 		}
 		else if(strcmp(functionName.c_str(),"open")==0){
@@ -239,7 +324,12 @@ void handle(string order){
 				printf("Operation error.\n");
 				return;
 			}
-			pair<string, Identifier> p1(fdstring, open(fdstring, op));
+            int id = open(v[0], op);
+            if(id==-1){
+                printf("File name not found.\n");
+                return;
+            }
+            pair<string, Identifier> p1(fdstring, id);
 			fd.push_back(p1);
 		}
 	}
@@ -249,12 +339,12 @@ int main(){
 	init();
 	string order;
 	while(1){
+        printf("Input your order: ");
 		getline(cin, order);
 		handle(order);
 	}
 	return 0;
 }
-
 
 Identifier create(string filename, Quantity maxlength, PROTECTION protect){
 	Quantity blocks = ceil(maxlength / BLOCKSIZE);
@@ -293,14 +383,13 @@ void write(Identifier fileID, Quantity byte2write){
 	UserOpenFileNode * node = NULL;
 	for(int i=0; i<MAXOPENFILE; i++){
 		if(fileID == currentUOF->fileNode[i]->fileID){
+            printf("Write file name : %s.\n",currentUOF->fileNode[i]->filename.c_str());
 			node = currentUOF->fileNode[i];
+            node->writePointer += byte2write;
+            node->currentLength += byte2write;
 			break;
 		}
-	}
-	if(node){
-		node->writePointer += byte2write;
-		node->currentLength += byte2write;
-	}
+    }
 }
 
 void read(Identifier fileID, Quantity byte2read){

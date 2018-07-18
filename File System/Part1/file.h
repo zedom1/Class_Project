@@ -25,7 +25,7 @@ struct UserFileDirectory
 	string filename;
 	PROTECTION protectWay;
 	Quantity currentLength;
-	Quantity maxLength;
+    Quantity maxLength;
 	File* address;
 	Memory startBlock;
 
@@ -91,8 +91,8 @@ User::User(){
 
 UserFileDirectory::UserFileDirectory(){
 	stringstream stream;
-	fileID = numFile++;
-	stream<<"File "<<(char)(fileID+'A'-1)<<fileID;
+    fileID = numFile++;
+    stream<<"File"<<(char)(fileID+'A')<<fileID;
 	filename = stream.str();
 	protectWay = PROTECTION(rand()%3+1);
 	currentLength = rand()%1000;
@@ -101,23 +101,25 @@ UserFileDirectory::UserFileDirectory(){
 }
 
 UserFileDirectory::UserFileDirectory(string fname, PROTECTION protect, Memory startB, Quantity maxl){
-	fileID = numFile++;
+    fileID = numFile++;
 	filename = fname;
 	protectWay = protect;
 	startBlock = startB;
 	maxLength = maxl;
+    currentLength = 0;
 	address = new File();
 }
 
 void MainFileDirectory::writeBack(UserOpenFileNode * node){
+    if(node->status==INVALID)
+        return;
 	UserFileDirectory * u;
 	for(int i=0; i<ufd.size(); i++){
 		if(ufd[i]->fileID == node->fileID){
-			u = ufd[i];
-			break;
+            ufd[i]->currentLength = node->currentLength;
+            return;
 		}
 	}
-	u->currentLength = node->currentLength;
 }
 
 UserFileDirectory::~UserFileDirectory(){
