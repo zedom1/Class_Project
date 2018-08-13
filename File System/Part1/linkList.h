@@ -4,6 +4,7 @@
 
 #include "common.h"
 
+// 单独一个节点的类，保存一块连续可用空间的起始位置及长度
 struct ListNode{
 	Memory start;
 	Memory length;
@@ -14,16 +15,24 @@ struct ListNode{
 
 };
 
+// 带首尾哨兵的双向链表类
 struct List{
 	Quantity _size ;
 	ListNode * header,*trailer;
 	List();
+	// 给定节点指针，将其从链表中删除
 	Memory* removeNode(  ListNode * p );
+	// 获取除哨兵外的第一个节点
 	ListNode * first();
+	// 清空除哨兵外的所有节点
 	Quantity clear();
+	// 在给定节点前面插入节点，a为大小为2的数组，a[0]为起始位置，a[1]为长度
 	void insertBefore( ListNode* node, Memory * a );
+	// 在p前的n个节点内找到长度<=e的节点
 	ListNode * search( Memory e, Quantity n, ListNode * p );
+	// 对节点进行排序
 	void insertionSort( );
+	// 根据起始位置和长度自行插入
 	ListNode * insertSingle( Memory start , Memory length);
 };
 

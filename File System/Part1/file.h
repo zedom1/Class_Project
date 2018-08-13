@@ -10,6 +10,7 @@ struct File
 	~File(){}
 };
 
+// 用户类，记录用户id和用户名
 struct User
 {
 
@@ -19,6 +20,7 @@ struct User
 	~User(){}
 };
 
+// 一个单独的用户文件节点，记录各种信息
 struct UserFileDirectory
 {
 	Identifier fileID;
@@ -35,7 +37,7 @@ struct UserFileDirectory
 	
 };
 
-
+// 一个用户打开文件节点，除基本信息外还记录读写指针
 struct UserOpenFileNode
 {
 
@@ -54,6 +56,7 @@ struct UserOpenFileNode
 	
 };
 
+// 文件目录节点，记录一个用户及其拥有的文件列表
 struct MainFileDirectory
 {
 	Identifier userID;
@@ -66,7 +69,7 @@ struct MainFileDirectory
 	~MainFileDirectory(){}
 };
 
-
+// 用户打开文件列表节点，记录一个用户及其打开文件列表
 struct UserOpenFile
 {
 	UserOpenFileNode *fileNode[MAXOPENFILE];
@@ -81,7 +84,7 @@ struct UserOpenFile
 	
 };
 
-
+// 随机初始化用户
 User::User(){
 	stringstream stream;
 	userID = numUser++;
@@ -89,17 +92,20 @@ User::User(){
 	userName = stream.str();
 }
 
+// 随机初始化文件，默认读写方式为可读可写可执行
 UserFileDirectory::UserFileDirectory(){
 	stringstream stream;
     fileID = numFile++;
     stream<<"File"<<(char)(fileID+'A')<<fileID;
 	filename = stream.str();
-	protectWay = PROTECTION(rand()%3+1);
+	protectWay = PROTECTION(3);
 	currentLength = rand()%1000;
-	maxLength = rand()%3000+1000;
+	maxLength = ceil((rand()%2000+1000)*1.0/BLOCKSIZE)*BLOCKSIZE;
 	address = new File();
+	startBlock = allocateSpace(maxLength/BLOCKSIZE);
 }
 
+// 带条件的构造函数
 UserFileDirectory::UserFileDirectory(string fname, PROTECTION protect, Memory startB, Quantity maxl){
     fileID = numFile++;
 	filename = fname;
@@ -110,6 +116,7 @@ UserFileDirectory::UserFileDirectory(string fname, PROTECTION protect, Memory st
 	address = new File();
 }
 
+// 将打开文件的信息写回到磁盘文件信息
 void MainFileDirectory::writeBack(UserOpenFileNode * node){
     if(node->status==INVALID)
         return;
