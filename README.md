@@ -4,7 +4,9 @@
  - Part2: lexical analysis	(java)
  - Part3: Bank System		(java+fx)
  - Part4: Movie System		(java+fx)
- - Part5: Sorting Algorithm(c++ + Qt)
+ - Part5: Sorting Algorithm (c++ +Qt)
+ - Part6: File System 		(c++)
+
 
 ### Java 练手代码
 
@@ -45,9 +47,18 @@
 	设计多个构造函数相互调用
 ​	
 
-### Bank System
+### File System
 
-待补充。。。
+综述：
+
+	实现两个简易的文件管理系统：二级目录和FAT
+
+练习点：
+
+	文件系统知识点
+
+	使用双向链表管理二级目录的剩余磁盘空间	
+
 
 ### Movie System
 
@@ -58,7 +69,9 @@
 
 
 	类体系设计（主）
+
 	java fx的使用
+
 	随机文件读写及文件内容修改
 
 ### 排序算法演示系统
